@@ -10,7 +10,7 @@
 - Screen has no website link or opening status. All categories appear in a
   photo-led continuous gallery with a visible scrollbar and category navigation.
 - Scrolling is manual by default. Only the admin screen settings can enable
-  automatic scrolling; wheel/touch/key interaction pauses it. Pause/Resume only
+  automatic scrolling; wheel/touch/key interaction pauses it. Automatic motion
   is controlled only in admin. The public footer has only fullscreen; reduced
   motion and live updates still work.
 - Preserve the earlier counter composition: brand header, side category
@@ -49,12 +49,14 @@ from the original Node server. The existing application is the design baseline.
 - Content, photos and sessions survive a local Workers runtime restart.
 
 ## Counter screen and browse-only menu acceptance
-- Check `/screen` at 1024×600, 1280×800 and 1920×1080: four/six product cards,
-  full-width stage, readable names/prices and no card/footer clipping.
-- Previous and next change the displayed page; previous restores the page.
+- Check `/screen` at 1024×600, 1280×800 and 1920×1080: medium-sized photo cards,
+  the existing category sidebar, readable names/prices and reachable footer.
+- Scroll down through all products; open a product and use the explicit back
+  button to return to the same position. Keyboard Escape also closes it.
 - Category buttons select the requested category and indicate the active one.
-- Auto advance changes the page after 15 seconds (or `?seconds=8` for testing).
-  Pause freezes the page; Play resumes. Resizing updates the page capacity.
+- The menu remains stationary by default. Admin → Cafe settings → Counter screen
+  can enable automatic scrolling. Manual interaction pauses it; no public
+  paging, Play/Pause, status or website-link controls are rendered.
 - Fullscreen enters and exits; English/Arabic switch retains the screen route.
 - Phone `/menu` and `/en/menu` at 390px: no horizontal document overflow,
   horizontal category rail, scrollable photo/name/price cards and correct symbol.
@@ -67,7 +69,7 @@ from the original Node server. The existing application is the design baseline.
 - Reordering controls start hidden and become available through More settings.
 - On phone admin, four bottom tabs fit: Menu, Photos, Cafe settings and More.
 
-## Verified production checks, 2026-11-06
+## Earlier production checks, before the photo-led refinement
 - Owner provisioned from secure credential form. Basic login and authenticated
   `/api/admin/me` passed; one-time setup secret was deleted.
 - Screen fit, paging/category controls and fullscreen passed at the sizes above.
@@ -85,3 +87,18 @@ from the original Node server. The existing application is the design baseline.
 - Production was deployed through the Cloudflare API using secure credentials.
   Verify the saved Workers Builds token separately; a successful API deployment
   does not establish that automatic deployments from GitHub are healthy.
+
+## Photo-led release verification, 2026-11-06
+- Local Workers suite: 18 tests passed, including detail markup, admin-only
+  screen settings, CRUD/media/auth/CSRF and persistence regression checks.
+- Browser: product price save/restore and description save/display/restore
+  completed against local Workers. Enlarged detail, explicit back, Escape,
+  missing photo/description and 390px mobile detail view passed.
+- Fresh production context: restored sidebar/grid, 41 product edit/detail
+  targets, one fullscreen footer button, no screen status or website link.
+  Arabic product detail returned to the identical scroll offset and focus.
+  Fullscreen entered/exited, with no page errors in that verification.
+- Arabic/English routes, phone menu/details and 1024×600 counter layout were
+  checked. The enlarged photo uses object-fit:contain, not a cropped image.
+- Original product photos are still low-resolution; many drinks have no photo
+  or description yet. Upload actual photos and write descriptions in admin.

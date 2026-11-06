@@ -29,10 +29,15 @@ See [Durable Objects code updates](https://developers.cloudflare.com/durable-obj
 ## Counter screen, customer menu and owner account
 
 - `/screen` is the Arabic counter display; `/en/screen` is its English version.
-  It fills the display, cycles through category pages every 15 seconds and has
-  pause, previous/next, category and fullscreen controls. Smaller screens show
-  four products; larger displays show six. `?seconds=20` changes the interval
-  within the supported 8–60 second range.
+  It retains the brand header, category sidebar and medium-sized product grid.
+  Customers scroll manually or choose a category. The only footer control is
+  fullscreen; there is no opening status, website link or paging control.
+  Tap a product to see its full, uncropped photo, both names, price and saved
+  description. “Click here to go back” returns to the same scroll position;
+  Escape also closes the detail view.
+  Automatic scrolling is off by default. Only the owner can enable it under
+  Cafe settings → Counter screen (`#/website/screen`); manual interaction pauses
+  it and reduced-motion preferences are respected.
 - `/menu` and `/en/menu` are scrollable phone menus with photos, names, prices,
   category shortcuts, search and product details. There is no cart, checkout,
   quantity selector or add-to-cart action.
@@ -42,6 +47,9 @@ See [Durable Objects code updates](https://developers.cloudflare.com/durable-obj
 - `/admin` opens directly on the item list after sign-in. The three primary
   sections are Menu, Photos and Cafe settings. Category management, reordering,
   account options and optional product details are tucked away.
+  Each product's thumbnail and names are one edit link. Its editor keeps the
+  larger photo beside the name, price and availability fields. Add descriptions
+  under “Extra details (optional)”; the counter detail view uses that saved text.
 
 The production owner was provisioned on 2026-11-06 using the owner's secure
 credential form. Sign in with the username and password selected there. No
