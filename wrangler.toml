@@ -1,0 +1,22 @@
+name = "lmitcafe"
+main = "final1/lmit/cloudflare/worker.js"
+compatibility_date = "2026-11-06"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[build]
+command = "npm run build"
+
+[assets]
+directory = "./final1/lmit/.cloudflare/public"
+binding = "ASSETS"
+html_handling = "none"
+run_worker_first = ["/api/*", "/media/*", "/admin", "/admin/", "/healthz"]
+
+[[durable_objects.bindings]]
+name = "CAFE"
+class_name = "Cafe"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Cafe"]

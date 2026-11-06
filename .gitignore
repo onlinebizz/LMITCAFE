@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 !.env.sample
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 
 # Runtime database, uploaded media and local backups.
 final1/lmit/data/
@@ -20,3 +23,7 @@ __pycache__/
 *.pyc
 *.log
 .DS_Store
+
+# Wrangler development storage and generated deployment artifacts.
+.wrangler/
+final1/lmit/.cloudflare/

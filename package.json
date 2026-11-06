@@ -1,0 +1,15 @@
+{
+  "name": "lmit-cloudflare",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "build": "node --no-warnings final1/lmit/scripts/build-cloudflare.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test final1/lmit/tests/cloudflare.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "4.158.0"
+  }
+}

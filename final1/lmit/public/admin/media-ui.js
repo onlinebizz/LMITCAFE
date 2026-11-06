@@ -21,9 +21,15 @@ export const altOf = (m) => (lang() === 'ar' ? m.alt_ar || m.alt_en : m.alt_en |
 
 // ---------- downscale in the browser ----------
 const MB = 1048576;
+const dataUrl = (blob) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = reject;
+  reader.readAsDataURL(blob);
+});
 async function bitmapOf(file) {
   try { return await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch { /* fall back */ }
-  const url = URL.createObjectURL(file);
+  const url = await dataUrl(file);
   try {
     return await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
   } finally { URL.revokeObjectURL(url); }
@@ -34,22 +40,18 @@ export async function prepareImage(file) {
   try { bmp = await bitmapOf(file); } catch { throw new ApiError('bad_image'); }
   const w = bmp.width || bmp.naturalWidth;
   const hh = bmp.height || bmp.naturalHeight;
-  let blob = file;
-  let name = file.name;
-  if (file.size > 3 * MB || w > 2400) {
-    const k = Math.min(1, 2400 / w);
-    const c = document.createElement('canvas');
-    c.width = Math.round(w * k);
-    c.height = Math.round(hh * k);
-    const g = c.getContext('2d');
-    g.fillStyle = '#fff';
-    g.fillRect(0, 0, c.width, c.height);
-    g.drawImage(bmp, 0, 0, c.width, c.height);
-    const out = await new Promise((res) => c.toBlob(res, 'image/jpeg', 0.9));
-    if (out && (out.size < file.size || file.size > 10 * MB)) { blob = out; name = `${file.name.replace(/\.[^.]+$/, '') || 'photo'}.jpg`; }
-  }
+  const k = Math.min(1, 2400 / Math.max(w, hh));
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w * k));
+  c.height = Math.max(1, Math.round(hh * k));
+  const g = c.getContext('2d');
+  g.drawImage(bmp, 0, 0, c.width, c.height);
+  if (bmp.close) bmp.close();
+  const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+  if (!blob) throw new ApiError('bad_image');
+  const name = `${file.name.replace(/\.[^.]+$/, '') || 'photo'}.png`;
   if (blob.size > 10 * MB) throw new ApiError('too_large');
-  return { blob, name, w, h: hh, preview: URL.createObjectURL(blob), size: blob.size };
+  return { blob, name, w: c.width, h: c.height, preview: await dataUrl(blob), size: blob.size };
 }
 
 // ---------- rotate and crop (browser canvas, centered crop) ----------
@@ -72,8 +74,11 @@ async function transformImage(file, rot, aspect) {
   g.rotate((rot * Math.PI) / 2);
   g.scale(k, k);
   g.drawImage(bmp, -sw / 2, -sh / 2);
-  const blob = await new Promise((res) => c.toBlob(res, 'image/jpeg', 0.9));
-  return { blob, name: `${file.name.replace(/\.[^.]+$/, '') || 'photo'}.jpg`, w: c.width, h: c.height, preview: URL.createObjectURL(blob), size: blob.size };
+  if (bmp.close) bmp.close();
+  const blob = await new Promise((res) => c.toBlob(res, 'image/png'));
+  if (!blob) throw new ApiError('bad_image');
+  if (blob.size > 10 * MB) throw new ApiError('too_large');
+  return { blob, name: `${file.name.replace(/\.[^.]+$/, '') || 'photo'}.png`, w: c.width, h: c.height, preview: await dataUrl(blob), size: blob.size };
 }
 
 // ---------- upload dialog: preview, purpose and alt text before saving ----------
