@@ -127,3 +127,12 @@ from the original Node server. The existing application is the design baseline.
   removes the mark and the outline returns for keyboard visitors. Scoped to
   the counter screen script and stylesheet; no other routes changed.
   Local Workers suite: 19 tests passed.
+
+## Home page cleanup, 2026-11-07
+- The category "doors" section was removed from the home page in both
+  languages; the header and footer menu buttons already lead to the full
+  menu. The renderer no longer emits that section.
+- The Instagram link (instagram.com/lmit_cafe) was saved in Cafe settings so
+  it appears beside TikTok in the footer and the visit section on the home
+  page. No other settings were changed.
+- Local Workers suite: 19 tests passed; menu, screen and health routes 200.

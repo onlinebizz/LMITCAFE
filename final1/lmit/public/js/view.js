@@ -258,13 +258,8 @@ export function renderHome(site, cats, lang, now = new Date()) {
     ${heroImg ? `<div class="hero-pane"><div class="pane">${imgHtml(heroImg, { lang, sizes: '(min-width: 900px) 440px, 80vw', eager: true })}</div></div>` : ''}
   </section>`;
 
-  const doors = cats.length ? `<section class="doors" aria-labelledby="doors-t"><h2 id="doors-t" class="sec-title">${esc(t(lang, 'menu_title'))}</h2>
-    <ul class="door-grid">${cats.map((c) => {
-      const n = names(c, lang);
-      const d = lang === 'ar' ? c.desc_ar : c.desc_en;
-      return `<li data-accent="${esc(c.accent)}"><a class="door" href="${menuPath(lang)}#cat-${esc(c.slug)}"><span class="door-name">${esc(n.p)}</span>${sec(n)}${d ? `<span class="door-desc">${esc(d)}</span>` : ''}${ICON.arrow}</a></li>`;
-    }).join('')}</ul></section>` : '';
-
+  // The home page no longer shows the category "doors" section; the header and
+  // footer menu button already lead to the full menu page.
   const promos = (site.promotions || []).length ? `<section class="promos" aria-label="${esc(t(lang, 'picks'))}">${site.promotions.map((p) => {
     const ttl = lang === 'ar' ? p.title_ar || p.title_en : p.title_en || p.title_ar;
     const txt = lang === 'ar' ? p.text_ar || p.text_en : p.text_en || p.text_ar;
@@ -300,7 +295,7 @@ export function renderHome(site, cats, lang, now = new Date()) {
         ${Object.values(site.social || {}).some(Boolean) ? `<p class="follow">${esc(t(lang, 'follow'))}</p><div class="chips">${socialLinks(site)}</div>` : ''}
       </div></div></section>`;
 
-  return `${hero}${doors}${promos}${wall}${gallery}${visit}`;
+  return `${hero}${promos}${wall}${gallery}${visit}`;
 }
 
 // ---------- menu page ----------
