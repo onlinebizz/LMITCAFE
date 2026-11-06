@@ -1,0 +1,19 @@
+# Never copy local credentials or live customer data into the image.
+.env
+.env.*
+data/
+**/*.db
+**/*.db-*
+**/*.sqlite
+**/*.sqlite-*
+**/*.sqlite3
+**/*.sqlite3-*
+backups/
+
+# Development-only artifacts.
+.git/
+node_modules/
+**/__pycache__/
+**/*.pyc
+**/*.log
+.DS_Store

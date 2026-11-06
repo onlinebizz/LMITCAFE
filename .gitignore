@@ -1,0 +1,22 @@
+# Local credentials. Keep credential-free templates trackable.
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Runtime database, uploaded media and local backups.
+final1/lmit/data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+backups/
+
+# Local tools and generated files.
+node_modules/
+__pycache__/
+*.pyc
+*.log
+.DS_Store
