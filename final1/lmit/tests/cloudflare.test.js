@@ -7,6 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { deflateSync } from 'node:zlib';
+import { createServer } from 'node:net';
 import { t as text, renderHours } from '../public/js/view.js';
 import { displayGallery, renderScreen } from '../public/js/display-view.js';
 import { counterDetailMarkup } from '../public/js/counter-detail.js';
@@ -93,7 +94,14 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   const password = crypto.randomBytes(18).toString('hex');
   const changedPassword = crypto.randomBytes(18).toString('hex');
   const setupKey = crypto.randomBytes(32).toString('hex');
-  const base = 'http://127.0.0.1:8790';
+  const reservation = createServer();
+  await new Promise((resolve, reject) => {
+    reservation.once('error', reject);
+    reservation.listen(0, '127.0.0.1', resolve);
+  });
+  const port = reservation.address().port;
+  await new Promise((resolve, reject) => reservation.close((error) => error ? reject(error) : resolve()));
+  const base = `http://127.0.0.1:${port}`;
   let child;
   let logs = '';
   let cookie = '';
@@ -101,7 +109,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   let persistentImage;
   async function start() {
     child = spawn(process.execPath, [
-      'node_modules/wrangler/bin/wrangler.js', 'dev', '--local', '--ip', '127.0.0.1', '--port', '8790',
+      'node_modules/wrangler/bin/wrangler.js', 'dev', '--local', '--ip', '127.0.0.1', '--port', String(port),
       '--persist-to', dir, '--var', `ADMIN_EMAIL:${email}`, '--var', `ADMIN_PASSWORD:${password}`, '--var', `ADMIN_SETUP_KEY:${setupKey}`,
     ], { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, WRANGLER_SEND_METRICS: 'false' } });
     child.stdout.on('data', (data) => { logs += data; });
