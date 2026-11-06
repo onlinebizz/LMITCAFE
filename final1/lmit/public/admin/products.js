@@ -33,6 +33,7 @@ const list = {
         h('a', { class: 'menu-destination', href: lang() === 'ar' ? '/menu' : '/en/menu', target: '_blank', rel: 'noopener' }, ic('external'), t('open_customer_menu'))),
       h('div', { class: 'filters' }, h('div', { class: 'search-wrap' }, ic('search'), search), catSel.el, availSel.el),
       h('details', { class: 'menu-extra-tools' }, h('summary', t('extra_settings')),
+        h('a', { class: 'btn btn-quiet btn-sm', href: '#/website/screen' }, ic('site'), t('ws_screen')),
         h('a', { class: 'btn btn-quiet btn-sm', href: '#/categories' }, ic('tag'), t('nav_categories')), arrange),
       live, body);
 
@@ -132,8 +133,9 @@ const list = {
       const sec = otherName(p);
       const cat = st.cats.find((c) => c.id === p.category_id);
       const li = h('li', { class: `prow ${p.available ? '' : 'is-off'}`, 'data-id': p.id, 'data-accent': cat ? cat.accent : 'brass' },
-        h('div', { class: 'p-thumb' }, p.image ? imgEl(p.image, { sizes: '56px', w: 100, alt: '' }) : ic('cup')),
-        h('div', { class: 'p-names' }, h('b', { class: 'p-n1', dir: 'auto' }, nm), sec ? h('span', { class: 'p-n2', dir: 'auto' }, sec) : null),
+        h('a', { class: 'p-identity', href: `#/products/${p.id}`, 'aria-label': `${t('edit_item')}: ${nm}` },
+          h('span', { class: 'p-thumb' }, p.image ? imgEl(p.image, { sizes: '88px', w: 200, alt: '' }) : ic('cup')),
+          h('span', { class: 'p-names' }, h('b', { class: 'p-n1', dir: 'auto' }, nm), sec ? h('span', { class: 'p-n2', dir: 'auto' }, sec) : null)),
         h('div', { class: 'p-price' }, h('button', { type: 'button', class: 'price-btn', dir: 'ltr', 'aria-label': t('edit_price_of', { name: nm, price: moneyUnit(p.price) }), on: { click: () => editPrice(p, li) } }, h('i', t('sar')), ' ', h('b', money(p.price)), ic('edit'))),
         h('div', { class: 'p-flags' },
           toggle({ checked: p.available, label: t('available'), showLabel: true, cls: 'sw-avail', onChange: (v) => { li.classList.toggle('is-off', !v); return patch(p, { available: v }, t(v ? 'marked_available' : 'marked_unavailable', { name: nm })).catch((e) => { li.classList.toggle('is-off', v); throw e; }); } }),

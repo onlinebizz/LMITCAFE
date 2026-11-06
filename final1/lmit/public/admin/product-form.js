@@ -72,9 +72,10 @@ export default {
     const delBtn = p ? btn([ic('trash'), t('delete_item')], 'btn-danger-quiet', del) : null;
 
     const form = h('form', { class: 'pform', novalidate: true },
-      h('div', { class: 'pf-grid' },
-        h('div', { class: 'pf-main' }, category.el, h('div', { class: 'two' }, nameAr.el, nameEn.el), price.el),
-        h('div', { class: 'pf-side' }, photo.el, h('div', { class: 'sw-stack' }, sw('available', t('available'))))),
+      h('section', { class: 'product-workspace' },
+        h('div', { class: 'product-photo' }, photo.el),
+        h('div', { class: 'product-fields' }, h('div', { class: 'two' }, nameAr.el, nameEn.el), category.el, price.el,
+          sw('available', t('available')))),
       h('details', { class: 'product-advanced' }, h('summary', t('optional_details')),
         h('div', { class: 'two' }, descAr.el, descEn.el),
         h('div', { class: 'sw-stack' }, sw('featured', t('featured')), sw('bestseller', t('bestseller'))),

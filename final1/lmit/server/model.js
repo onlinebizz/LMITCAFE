@@ -116,6 +116,7 @@ export function publicSite() {
     business: s.business || {}, hero, values: s.values || [], gallery, social: s.social || {},
     hours: s.hours || [], announcement: s.announcement || { active: false },
     orders: s.orders || { enabled: false }, seo: s.seo || {},
+    screen: { auto_scroll: s.screen?.auto_scroll === true },
     promotions: listPromotions({ onlyLive: true }),
   };
 }

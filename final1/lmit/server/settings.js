@@ -11,6 +11,7 @@ const imageId = (v, field) => {
 };
 
 export const normalizers = {
+  screen: (v) => ({ auto_scroll: !!vBool(v.auto_scroll) }),
   business: (v) => ({
     name_ar: vStr(v.name_ar, 'name_ar', { max: 80, req: true }),
     name_en: vStr(v.name_en, 'name_en', { max: 80, req: true }),

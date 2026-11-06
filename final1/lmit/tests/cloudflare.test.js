@@ -8,7 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { deflateSync } from 'node:zlib';
 import { t as text, renderHours } from '../public/js/view.js';
-import { displayPages, displayPanel } from '../public/js/display-view.js';
+import { displayGallery, renderScreen } from '../public/js/display-view.js';
 
 function png(width = 1, height = 1, random = false) {
   const chunk = (type, data) => {
@@ -40,15 +40,19 @@ test('Weekday translations stay arrays and render complete day names', () => {
   assert.match(renderHours(hours, 'en'), /Saturday to Friday/);
   assert.match(renderHours(hours, 'ar'), /السبت إلى الجمعة/);
 });
-test('Counter display paginates every product without losing category boundaries', () => {
+test('Counter display renders all products, without links/status or default automatic motion', () => {
   const products = Array.from({ length: 11 }, (_, index) => ({ id: index + 1, name_ar: `صنف ${index + 1}`, name_en: `Item ${index + 1}`, price: 10, available: true }));
   const categories = [{ id: 1, name_ar: 'ساخن', name_en: 'Hot', products }, { id: 2, name_ar: 'فارغ', products: [] }];
-  assert.deepEqual(displayPages(categories, 6).map((page) => page.items.length), [6, 5]);
-  assert.deepEqual(displayPages(categories, 4).map((page) => page.items.length), [4, 4, 3]);
-  const markup = displayPanel(displayPages(categories, 6)[0], 'ar');
+  const markup = displayGallery(categories, 'ar');
+  assert.equal((markup.match(/class="screen-card"/g) || []).length, 11);
   assert.match(markup, /ريال سعودي/);
   assert.doesNotMatch(markup, /data-add|cart-bar/);
-  assert.deepEqual(displayPages([], 6), []);
+  assert.match(displayGallery([], 'ar'), /القائمة تحت التحديث/);
+  const screen = renderScreen({}, categories, 'ar');
+  assert.doesNotMatch(screen, /screen-status|screen-phone-link|screen-page-count|screen-prev/);
+  assert.match(screen, /id="screen-pause" aria-pressed="true" hidden/);
+  assert.match(screen, /id="screen-panel" tabindex="0"/);
+  assert.doesNotMatch(renderScreen({ screen: { auto_scroll: true } }, categories, 'en'), /aria-pressed="true" hidden/);
 });
 
 test('Cloudflare runtime preserves the public site and owner dashboard', { timeout: 180000 }, async (t) => {
@@ -149,6 +153,14 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
       const item = (await request('/api/menu')).data.categories.flatMap((c) => c.products).find((p) => p.id === 1);
       assert.equal(item.price, 12.34); assert.equal(item.available, false);
       await request('/api/admin/products/1', { method: 'PUT', body: { price: original.price, available: original.available } });
+    });
+    await t.test('Only admin can enable screen auto-scroll; default is manual', async () => {
+      assert.equal((await request('/api/site')).data.screen.auto_scroll, false);
+      assert.equal((await request('/api/admin/settings', { method: 'PUT', auth: false, body: { screen: { auto_scroll: true } } })).status, 401);
+      assert.equal((await request('/api/admin/settings', { method: 'PUT', body: { screen: { auto_scroll: true } } })).status, 200);
+      assert.equal((await request('/api/site')).data.screen.auto_scroll, true);
+      assert.equal((await request('/api/admin/settings', { method: 'PUT', body: { screen: { auto_scroll: false } } })).status, 200);
+      assert.equal((await request('/api/site')).data.screen.auto_scroll, false);
     });
     await t.test('Categories, products, variants, extras, reorder and protected deletion', async () => {
       const category = (await request('/api/admin/categories', { method: 'POST', body: { name_ar: 'قسم اختبار', name_en: 'Test category' } })).data.category;

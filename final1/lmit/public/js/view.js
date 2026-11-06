@@ -221,13 +221,6 @@ export function renderFooter(site, lang) {
 }
 
 // ---------- home ----------
-function productCard(p, lang) {
-  const n = names(p, lang);
-  const big = p.image && p.image.w >= 500;
-  const img = p.image ? `<span class="pick-img${big ? '' : ' is-small'}">${imgHtml(p.image, { lang, sizes: '240px', decorative: true })}</span>` : '';
-  return `<a class="pick" href="${menuPath(lang)}#p-${p.id}" data-accent="${esc(p.accent || 'brass')}">${img}<span class="pick-body"><span class="n1">${esc(n.p)}</span>${sec(n)}${priceHtml(p.price, lang)}</span></a>`;
-}
-
 export function renderStatusChip(site, lang, now = new Date()) {
   const st = openStatus(site.hours, now);
   const tx = statusText(st, lang, riyadhNow(now).day);
@@ -272,10 +265,6 @@ export function renderHome(site, cats, lang, now = new Date()) {
       return `<li data-accent="${esc(c.accent)}"><a class="door" href="${menuPath(lang)}#cat-${esc(c.slug)}"><span class="door-name">${esc(n.p)}</span>${sec(n)}${d ? `<span class="door-desc">${esc(d)}</span>` : ''}${ICON.arrow}</a></li>`;
     }).join('')}</ul></section>` : '';
 
-  const picks = [];
-  for (const c of cats) for (const p of c.products) if ((p.featured || p.bestseller) && p.available) picks.push({ ...p, accent: c.accent });
-  const picksHtml = picks.length ? `<section class="picks" aria-labelledby="picks-t"><h2 id="picks-t" class="sec-title">${esc(t(lang, 'picks'))}</h2><div class="pick-rail">${picks.map((p) => productCard(p, lang)).join('')}</div></section>` : '';
-
   const promos = (site.promotions || []).length ? `<section class="promos" aria-label="${esc(t(lang, 'picks'))}">${site.promotions.map((p) => {
     const ttl = lang === 'ar' ? p.title_ar || p.title_en : p.title_en || p.title_ar;
     const txt = lang === 'ar' ? p.text_ar || p.text_en : p.text_en || p.text_ar;
@@ -311,7 +300,7 @@ export function renderHome(site, cats, lang, now = new Date()) {
         ${Object.values(site.social || {}).some(Boolean) ? `<p class="follow">${esc(t(lang, 'follow'))}</p><div class="chips">${socialLinks(site)}</div>` : ''}
       </div></div></section>`;
 
-  return `${hero}${doors}${picksHtml}${promos}${wall}${gallery}${visit}`;
+  return `${hero}${doors}${promos}${wall}${gallery}${visit}`;
 }
 
 // ---------- menu page ----------
@@ -338,7 +327,7 @@ export function renderMenuSections(cats, lang) {
     const n = names(c, lang);
     const d = lang === 'ar' ? c.desc_ar : c.desc_en;
     return `<section class="cat" id="cat-${esc(c.slug)}" data-cat="${esc(c.slug)}" data-accent="${esc(c.accent)}" aria-labelledby="h-${esc(c.slug)}">
-      <header class="cat-head"><h2 id="h-${esc(c.slug)}"><span class="cat-mark" aria-hidden="true"></span><span class="cat-name">${esc(n.p)}</span>${sec(n)}</h2>${d ? `<p class="cat-desc">${esc(d)}</p>` : ''}</header>
+      <header class="cat-head"><h2 id="h-${esc(c.slug)}"><span class="cat-name">${esc(n.p)}</span>${sec(n)}</h2>${d ? `<p class="cat-desc">${esc(d)}</p>` : ''}</header>
       ${c.products.length ? `<ul class="items">${c.products.map((p) => itemRow(p, lang)).join('')}</ul>` : ''}
     </section>`;
   }).join('');

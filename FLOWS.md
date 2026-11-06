@@ -1,5 +1,18 @@
 # LMIT migration checks
 
+## Photo-led refinement acceptance
+- No Picks / المختارات section; photographs have no decorative frames or grids.
+- Screen has no website link or opening status. All categories appear in a
+  photo-led continuous gallery with a visible scrollbar and category navigation.
+- Scrolling is manual by default. Only the admin screen settings can enable
+  automatic scrolling; wheel/touch/key interaction pauses it. Pause/Resume only
+  appears when enabled; fullscreen, reduced motion and live updates still work.
+- Images retain their aspect ratio. Category decoration uses the existing
+  forest/cream palette, not multicolored markers. Secondary text isolates bidi.
+- Admin photo and names form one clickable identity; photo, editable names,
+  price and availability stay together in the editor. CRUD/media still work.
+- Check desktop 1280×800, counter 1024×600 and phone 390px in both languages.
+
 Baseline inspected on 2026-11-06: the Arabic homepage and admin login render
 from the original Node server. The existing application is the design baseline.
 

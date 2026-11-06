@@ -4,6 +4,8 @@ const ar5 = (zero, one, two, few, many, other) => ({ zero, one, two, few, many, 
 const en = {
   login_id: 'Username or email',
   open_screen: 'Open counter screen', open_customer_menu: 'Open phone menu',
+  ws_screen: 'Counter screen', screen_auto_scroll: 'Automatic scrolling',
+  screen_scroll_hint: 'The screen stays still and scrolls manually by default. Enable this only for an unattended display. Touching or scrolling the screen pauses automatic motion.',
   extra_settings: 'More settings', optional_details: 'Extra details (optional)',
   arrange_menu: 'Arrange items', menu_help: 'Change a price, add a photo or mark an item sold out. Both menus update automatically.',
   brand: 'LMIT', skip: 'Skip to content', main_nav: 'Main navigation', more: 'More', lang_other: 'العربية', open_site: 'Open the website',
@@ -123,6 +125,8 @@ const en = {
 const ar = {
   login_id: 'اسم المستخدم أو البريد الإلكتروني',
   open_screen: 'افتح شاشة الكاشير', open_customer_menu: 'افتح قائمة الجوال',
+  ws_screen: 'شاشة الكاشير', screen_auto_scroll: 'التمرير التلقائي',
+  screen_scroll_hint: 'الشاشة ثابتة افتراضيًا ويمكن تمريرها يدويًا. فعّل هذا الخيار فقط للعرض التلقائي. لمس الشاشة أو تمريرها يوقف الحركة مؤقتًا.',
   extra_settings: 'إعدادات إضافية', optional_details: 'تفاصيل إضافية (اختياري)',
   arrange_menu: 'ترتيب الأصناف', menu_help: 'غيّر السعر أو أضف صورة أو حدّد الصنف غير المتوفر. تتحدث الشاشتان تلقائيًا.',
   brand: 'لميت', skip: 'انتقل إلى المحتوى', main_nav: 'التنقل الرئيسي', more: 'المزيد', lang_other: 'English', open_site: 'افتح الموقع',

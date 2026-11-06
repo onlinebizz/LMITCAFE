@@ -5,7 +5,7 @@ import { h, ic, pageHead, field, selectField, toggle, btn, toast, setDirty, clea
 import { pickName } from './format.js';
 import { imageField, imgEl, pickImages, altOf } from './media-ui.js';
 
-const SUBS = ['hours', 'business', 'home', 'announcement', 'search'];
+const SUBS = ['screen', 'hours', 'business', 'home', 'announcement', 'search'];
 const ICONS = ['friends', 'calm', 'oxygen', 'bean', 'leaf', 'cup'];
 const DAY_ORDER = [6, 0, 1, 2, 3, 4, 5];
 
@@ -36,6 +36,22 @@ function settingsForm(reg, kids, collect) {
 }
 const F = (reg, path, o) => { const f = field(o); reg[path] = f; f.input.setAttribute('data-path', path); return f; };
 const fail = (path, message) => Object.assign(new Error(message), { path });
+
+// The counter is manual by default; only an owner can enable automatic motion.
+function screenSettings(body, s) {
+  let enabled = s.screen?.auto_scroll === true;
+  let touch = () => {};
+  const sf = settingsForm({}, [
+    h('section', { class: 'pf-sec' },
+      h('h2', { class: 'sec-title' }, t('ws_screen')),
+      h('p', { class: 'hint' }, t('screen_scroll_hint')),
+      toggle({ checked: enabled, label: t('screen_auto_scroll'), showLabel: true,
+        onChange: (value) => { enabled = value; touch(); } }),
+      h('a', { class: 'btn', href: lang() === 'ar' ? '/screen' : '/en/screen', target: '_blank', rel: 'noopener' }, t('open_screen'))),
+  ], () => ({ screen: { auto_scroll: enabled } }));
+  touch = sf.touch;
+  body.append(sf.form);
+}
 
 // ---------- home ----------
 async function home(body, s) {
@@ -304,7 +320,8 @@ export default {
     const nav = h('nav', { class: 'subnav', 'aria-label': t('nav_website') }, SUBS.map((x) => h('a', { href: `#/website/${x}`, class: 'subnav-link', 'aria-current': x === sub ? 'page' : null }, t(`ws_${x}`))));
     const body = h('div', { class: 'ws-body' });
     root.append(pageHead(t('nav_website')), nav, body);
-    if (sub === 'home') await home(body, settings);
+    if (sub === 'screen') screenSettings(body, settings);
+    else if (sub === 'home') await home(body, settings);
     else if (sub === 'business') business(body, settings);
     else if (sub === 'hours') hours(body, settings);
     else simple(body, settings, sub === 'search' ? 'seo' : sub);
