@@ -21,6 +21,12 @@ It does not launch a Node server, start Python or open a local SQLite file.
 Cloudflare serves static files and runs the database-backed pages and APIs.
 See [Cloudflare's static assets documentation](https://developers.cloudflare.com/workers/static-assets/).
 
+After a successful deployment, an active Durable Object can keep running its
+previous code for up to five minutes under Cloudflare's default update strategy.
+Static files can update before database-backed page rendering does. Allow this
+rollout window before treating a mixed version as a failed deployment.
+See [Durable Objects code updates](https://developers.cloudflare.com/durable-objects/deployments/durable-objects-code-updates/).
+
 ## Set up the owner account
 
 In the Cloudflare dashboard, open this Worker, then **Settings**, **Variables and
