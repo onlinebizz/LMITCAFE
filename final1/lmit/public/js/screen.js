@@ -14,7 +14,7 @@ let active;
 let wakeLock;
 let lastFrame = 0;
 let holdUntil = performance.now() + 8000;
-let observer;
+let navFrame = 0;
 let remainder = 0;
 let detailDialog;
 
@@ -23,19 +23,23 @@ function setPaused(value) {
   holdUntil = performance.now() + 3000;
 }
 function watchGroups() {
-  observer?.disconnect();
-  observer = new IntersectionObserver((entries) => {
-    const visible = [...panel.querySelectorAll('.screen-group')].find((group) =>
-      group.getBoundingClientRect().bottom > panel.getBoundingClientRect().top + 100);
-    if (!visible || visible.dataset.category === active) return;
-    active = visible.dataset.category;
-    for (const button of nav.querySelectorAll('button')) {
-      if (button.dataset.screenCategory === active) button.setAttribute('aria-current', 'true');
-      else button.removeAttribute('aria-current');
-    }
-  }, { root: panel, threshold: [0, .1, .5, 1] });
-  panel.querySelectorAll('.screen-group').forEach((group) => observer.observe(group));
+  const top = panel.getBoundingClientRect().top;
+  const visible = [...panel.querySelectorAll('.screen-group')].find((group) =>
+    group.getBoundingClientRect().bottom > top + Math.min(100, panel.clientHeight / 3));
+  if (!visible || visible.dataset.category === active) return;
+  active = visible.dataset.category;
+  for (const button of nav.querySelectorAll('button')) {
+    if (button.dataset.screenCategory === active) button.setAttribute('aria-current', 'true');
+    else button.removeAttribute('aria-current');
+  }
 }
+// Observe actual scroll positions, including the final fractional pixel of a
+// smooth scroll. Intersection thresholds can miss a nearly-out-of-view group.
+panel.addEventListener('scroll', () => {
+  if (navFrame) return;
+  navFrame = requestAnimationFrame(() => { navFrame = 0; watchGroups(); });
+}, { passive: true });
+window.addEventListener('resize', watchGroups);
 nav.addEventListener('click', (event) => {
   const button = event.target.closest('[data-screen-category]');
   if (!button) return;
