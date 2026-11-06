@@ -9,6 +9,7 @@ import crypto from 'node:crypto';
 import { deflateSync } from 'node:zlib';
 import { t as text, renderHours } from '../public/js/view.js';
 import { displayGallery, renderScreen } from '../public/js/display-view.js';
+import { counterDetailMarkup } from '../public/js/counter-detail.js';
 
 function png(width = 1, height = 1, random = false) {
   const chunk = (type, data) => {
@@ -45,14 +46,34 @@ test('Counter display renders all products, without links/status or default auto
   const categories = [{ id: 1, name_ar: 'ساخن', name_en: 'Hot', products }, { id: 2, name_ar: 'فارغ', products: [] }];
   const markup = displayGallery(categories, 'ar');
   assert.equal((markup.match(/class="screen-card"/g) || []).length, 11);
+  assert.equal((markup.match(/data-screen-product=/g) || []).length, 11);
   assert.match(markup, /ريال سعودي/);
   assert.doesNotMatch(markup, /data-add|cart-bar/);
   assert.match(displayGallery([], 'ar'), /القائمة تحت التحديث/);
   const screen = renderScreen({}, categories, 'ar');
   assert.doesNotMatch(screen, /screen-status|screen-phone-link|screen-page-count|screen-prev/);
-  assert.match(screen, /id="screen-pause" aria-pressed="true" hidden/);
+  assert.doesNotMatch(screen, /screen-pause|screen-next|screen-prev/);
+  assert.match(screen, /screen-sidebar/);
   assert.match(screen, /id="screen-panel" tabindex="0"/);
-  assert.doesNotMatch(renderScreen({ screen: { auto_scroll: true } }, categories, 'en'), /aria-pressed="true" hidden/);
+  assert.match(renderScreen({ screen: { auto_scroll: true } }, categories, 'en'), /screen-fullscreen/);
+});
+test('Counter product detail includes full image, both names, price, description and explicit return', () => {
+  const product = { id: 1, name_ar: 'كيكة', name_en: 'Cake', price: 19, available: true,
+    desc_ar: 'شوكولاتة <طازجة>', desc_en: 'Chocolate cake',
+    image: { key: 'photo', ext: 'jpg', w: 1200, h: 900, widths: [] } };
+  const ar = counterDetailMarkup(product, 'ar');
+  assert.match(ar, /counter-detail-image/);
+  assert.match(ar, /شوكولاتة &lt;طازجة&gt;/);
+  assert.match(ar, /Cake/);
+  assert.match(ar, /ريال سعودي/);
+  assert.match(ar, /اضغط هنا للعودة/);
+  const en = counterDetailMarkup(product, 'en');
+  assert.match(en, /Click here to go back/);
+  assert.match(en, /Chocolate cake/);
+  assert.doesNotMatch(en, /data-add|cart/);
+  const missing = counterDetailMarkup({ id: 2, name_ar: 'قهوة', price: 10, available: true }, 'en');
+  assert.match(missing, /photo has not been added/);
+  assert.match(missing, /description has not been added/);
 });
 
 test('Cloudflare runtime preserves the public site and owner dashboard', { timeout: 180000 }, async (t) => {
@@ -117,7 +138,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
         const html = await response.text();
         assert.match(html, new RegExp(`<html lang="${lang}" dir="${dir}">`));
         if (url.includes('menu')) { assert.doesNotMatch(html, /data-add=|id="cart-bar"/); assert.match(html, /class="menu-photo/); }
-        if (url.includes('screen')) assert.match(html, /screen-pause/);
+        if (url.includes('screen')) assert.match(html, /screen-fullscreen/);
         assert.match(response.headers.get('content-security-policy'), /script-src 'self'/);
       }
       for (const url of ['/admin', '/admin/', '/admin/admin.js', '/css/site.css', '/fonts/jost.woff']) {

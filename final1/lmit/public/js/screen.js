@@ -1,12 +1,12 @@
 import { start } from './shell.js';
 import { displayGallery, displayNav } from './display-view.js';
+import { openCounterDetail, counterDetailMarkup } from './counter-detail.js';
 
 const lang = document.documentElement.lang;
 const boot = JSON.parse(document.getElementById('boot').textContent);
 let categories = boot.categories || [];
 const panel = document.getElementById('screen-panel');
 const nav = document.getElementById('screen-categories');
-const pause = document.getElementById('screen-pause');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 let autoEnabled = boot.site?.screen?.auto_scroll === true;
 let paused = !autoEnabled || motion.matches;
@@ -16,12 +16,10 @@ let lastFrame = 0;
 let holdUntil = performance.now() + 8000;
 let observer;
 let remainder = 0;
+let detailDialog;
 
 function setPaused(value) {
   paused = !autoEnabled || value;
-  pause.setAttribute('aria-pressed', String(paused));
-  pause.hidden = !autoEnabled;
-  pause.textContent = paused ? (lang === 'ar' ? 'استئناف التمرير' : 'Resume scrolling') : (lang === 'ar' ? 'إيقاف التمرير' : 'Pause scrolling');
   holdUntil = performance.now() + 3000;
 }
 function watchGroups() {
@@ -46,10 +44,23 @@ nav.addEventListener('click', (event) => {
   if (group) panel.scrollTo({ top: panel.scrollTop + group.getBoundingClientRect().top - panel.getBoundingClientRect().top, behavior: motion.matches ? 'instant' : 'smooth' });
 });
 for (const type of ['wheel', 'touchstart', 'pointerdown']) panel.addEventListener(type, () => setPaused(true), { passive: true });
+panel.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-screen-product]');
+  if (!button || detailDialog?.open) return;
+  const id = Number(button.dataset.screenProduct);
+  const product = categories.flatMap((category) => category.products || []).find((item) => item.id === id);
+  if (!product) return;
+  setPaused(true);
+  const scrollTop = panel.scrollTop;
+  detailDialog = openCounterDetail(product, lang, () => {
+    detailDialog = null;
+    panel.scrollTop = scrollTop;
+    (panel.querySelector(`[data-screen-product="${id}"]`) || panel).focus({ preventScroll: true });
+  });
+});
 panel.addEventListener('keydown', (event) => {
   if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) setPaused(true);
 });
-pause.addEventListener('click', () => setPaused(!paused));
 motion.addEventListener('change', () => { if (motion.matches) setPaused(true); });
 async function keepAwake() {
   try {
@@ -105,4 +116,12 @@ start((data) => {
   nav.innerHTML = displayNav(categories, Number(active), lang);
   panel.scrollTop = oldTop;
   watchGroups();
+  if (detailDialog?.open) {
+    const product = categories.flatMap((category) => category.products || []).find((item) => item.id === Number(detailDialog.dataset.product));
+    if (!product) detailDialog.close();
+    else {
+      detailDialog.innerHTML = counterDetailMarkup(product, lang);
+      detailDialog.querySelector('[data-detail-back]').focus({ preventScroll: true });
+    }
+  }
 });

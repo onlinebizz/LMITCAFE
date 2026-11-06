@@ -16,8 +16,10 @@ export function displayGallery(categories, lang) {
       <div class="screen-grid">${category.products.map((product) => {
         const pn = names(product, lang);
         return `<article class="screen-card${product.available ? '' : ' is-sold-out'}">
-          <div class="screen-photo${product.image ? '' : ' has-no-photo'}">${product.image ? imgHtml(product.image, { lang, sizes: '(min-width:1600px) 450px, (min-width:760px) 350px, 48vw' }) : '<img class="screen-photo-mark" src="/brand/logo-mark-cream.png" alt="" width="80" height="80">'}</div>
-          <div class="screen-card-body"><div class="screen-card-names"><h2>${esc(pn.p)}</h2>${pn.s ? `<p lang="${pn.sl}" dir="${pn.sl === 'ar' ? 'rtl' : 'ltr'}">${esc(pn.s)}</p>` : ''}</div>${priceHtml(product.price, lang)}${!product.available ? `<span class="screen-sold-out">${lang === 'ar' ? 'غير متوفر' : 'Sold out'}</span>` : ''}</div>
+          <button type="button" class="screen-product" data-screen-product="${product.id}" aria-haspopup="dialog" aria-label="${esc(lang === 'ar' ? `عرض صورة وتفاصيل ${pn.p}` : `View photo and details for ${pn.p}`)}">
+            <span class="screen-photo${product.image ? '' : ' has-no-photo'}">${product.image ? imgHtml(product.image, { lang, sizes: '(min-width:1600px) 450px, (min-width:760px) 350px, 48vw' }) : '<img class="screen-photo-mark" src="/brand/logo-mark-cream.png" alt="" width="80" height="80">'}</span>
+            <span class="screen-card-body"><span class="screen-card-names"><span class="screen-product-name" role="heading" aria-level="2">${esc(pn.p)}</span>${pn.s ? `<span class="screen-product-secondary" lang="${pn.sl}" dir="${pn.sl === 'ar' ? 'rtl' : 'ltr'}">${esc(pn.s)}</span>` : ''}</span>${priceHtml(product.price, lang)}${!product.available ? `<span class="screen-sold-out">${lang === 'ar' ? 'غير متوفر' : 'Sold out'}</span>` : ''}</span>
+          </button>
         </article>`;
       }).join('')}</div>
     </section>`;
@@ -28,8 +30,9 @@ export function renderScreen(site, categories, lang) {
   const otherLang = lang === 'ar' ? 'en' : 'ar';
   const first = categories.find((category) => category.products?.length);
   return `<div class="counter-screen">
-    <header class="screen-header"><img src="/brand/logo-lockup-cream.png" width="240" height="97" alt="LMIT"><nav id="screen-categories" aria-label="${lang === 'ar' ? 'الأقسام' : 'Categories'}">${displayNav(categories, first?.id, lang)}</nav><a class="screen-language" href="${otherLang === 'ar' ? '/screen' : '/en/screen'}" lang="${otherLang}" dir="${otherLang === 'ar' ? 'rtl' : 'ltr'}">${otherLang === 'en' ? 'English' : 'العربية'}</a></header>
-    <div class="screen-main" id="screen-panel" tabindex="0" role="region" aria-label="${lang === 'ar' ? 'قائمة لميت، مرّر لعرض المنتجات' : 'LMIT menu, scroll to browse products'}">${displayGallery(categories, lang)}</div>
-    <footer class="screen-footer"><button type="button" id="screen-pause" aria-pressed="true"${site.screen?.auto_scroll ? '' : ' hidden'}>${lang === 'ar' ? 'استئناف التمرير' : 'Resume scrolling'}</button><button type="button" id="screen-fullscreen">${lang === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</button></footer>
+    <header class="screen-header"><img src="/brand/logo-lockup-cream.png" width="240" height="97" alt="LMIT"><a class="screen-language" href="${otherLang === 'ar' ? '/screen' : '/en/screen'}" lang="${otherLang}" dir="${otherLang === 'ar' ? 'rtl' : 'ltr'}">${otherLang === 'en' ? 'English' : 'العربية'}</a></header>
+    <div class="screen-layout"><div class="screen-main" id="screen-panel" tabindex="0" role="region" aria-label="${lang === 'ar' ? 'قائمة لميت، مرّر لعرض المنتجات' : 'LMIT menu, scroll to browse products'}">${displayGallery(categories, lang)}</div>
+      <aside class="screen-sidebar"><p class="screen-kicker">${lang === 'ar' ? 'قائمتنا' : 'OUR MENU'}</p><nav id="screen-categories" aria-label="${lang === 'ar' ? 'الأقسام' : 'Categories'}">${displayNav(categories, first?.id, lang)}</nav><p class="screen-brand-line" lang="en" dir="ltr">Good coffee,<br>better days.</p></aside></div>
+    <footer class="screen-footer"><button type="button" id="screen-fullscreen">${lang === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</button></footer>
   </div>`;
 }

@@ -1,12 +1,20 @@
 # LMIT migration checks
 
 ## Photo-led refinement acceptance
+- Counter products open an enlarged, uncropped photo with both names, price and
+  the saved description. An explicit "Click here to go back" button closes it,
+  restores focus and preserves the menu's scroll position. Escape also closes.
+- Check this in Arabic/English at desktop/counter/phone widths, including a
+  missing photo/description and a product with a saved description.
 - No Picks / المختارات section; photographs have no decorative frames or grids.
 - Screen has no website link or opening status. All categories appear in a
   photo-led continuous gallery with a visible scrollbar and category navigation.
 - Scrolling is manual by default. Only the admin screen settings can enable
   automatic scrolling; wheel/touch/key interaction pauses it. Pause/Resume only
-  appears when enabled; fullscreen, reduced motion and live updates still work.
+  is controlled only in admin. The public footer has only fullscreen; reduced
+  motion and live updates still work.
+- Preserve the earlier counter composition: brand header, side category
+  navigation and product grid. No opening status, website link or paging controls.
 - Images retain their aspect ratio. Category decoration uses the existing
   forest/cream palette, not multicolored markers. Secondary text isolates bidi.
 - Admin photo and names form one clickable identity; photo, editable names,
