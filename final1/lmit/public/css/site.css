@@ -52,8 +52,8 @@ a:hover > .arrow, .btn:hover .arrow { transform: translateX(3px); }
 .hero { display: grid; gap: var(--space-6); padding: var(--space-6) var(--gutter) var(--space-8); max-width: none; }
 .hero > * { max-width: var(--max); width: 100%; margin-inline: auto; }
 .hero-copy { display: flex; flex-direction: column; gap: var(--space-4); align-items: flex-start; justify-content: center; }
-.hero-title { font-size: var(--step-4); color: var(--cream-50); letter-spacing: -.01em; text-wrap: balance; }
-.hero-sub { font-family: var(--font-display); font-style: italic; font-size: var(--step-2); color: var(--brass-300); }
+.hero-title { font-family: var(--font-body); font-weight: 500; font-size: var(--step-4); color: var(--cream-50); letter-spacing: -.01em; text-wrap: balance; }
+.hero-sub { font-family: var(--font-body); font-style: normal; font-size: var(--step-2); color: var(--brass-300); }
 :lang(ar) .hero-sub { font-style: normal; font-family: var(--font-body); font-size: var(--step-1); letter-spacing: .04em; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: var(--space-3); }
 .status { display: inline-flex; align-items: center; gap: .6rem; padding: .4rem 1rem; border: 1px solid rgba(240, 223, 200, .3); border-radius: var(--r-pill); font-size: var(--step--1); }

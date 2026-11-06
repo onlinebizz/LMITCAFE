@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, readFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -33,6 +33,17 @@ function png(width = 1, height = 1, random = false) {
     chunk('IHDR', header), chunk('IDAT', deflateSync(pixels)), chunk('IEND', Buffer.alloc(0)),
   ]);
 }
+
+test('Typography is upright and counter names and prices have consistent rows', async () => {
+  const css = await Promise.all(['css/fonts.css', 'css/site.css', 'css/screen.css', 'admin/admin.css']
+    .map((file) => readFile(new URL(`../public/${file}`, import.meta.url), 'utf8')));
+  for (const file of css) assert.doesNotMatch(file, /font-style:\s*(italic|oblique)/);
+  assert.match(css[0], /font-style:\s*normal\s*!important/);
+  assert.match(css[2], /\.screen-card-body\s*\{[^}]*flex-direction:\s*column/);
+  assert.match(css[2], /\.screen-card \.price\s*\{[^}]*margin-top:\s*auto/);
+  assert.match(css[2], /:root\[dir="rtl"\] \.screen-card-names\s*\{\s*text-align:\s*right/);
+  assert.match(css[2], /:root\[dir="ltr"\] \.screen-card-names\s*\{\s*text-align:\s*left/);
+});
 
 test('Weekday translations stay arrays and render complete day names', () => {
   assert.equal(text('en', 'days')[0], 'Sunday');

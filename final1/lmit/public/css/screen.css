@@ -23,21 +23,23 @@ body[data-page="screen"] > #main { margin: 0; padding: 0; max-width: none; }
 .screen-title h1 { margin: 0; color: var(--cream-50); font: 500 clamp(25px, 2.8vw, 42px)/1.4 var(--font-body); }
 .screen-title p { margin: 0; color: var(--cream-300); font-size: clamp(14px, 1.3vw, 20px); }
 .screen-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 20px; }
-.screen-card { min-width: 0; }
-.screen-product { width: 100%; border: 0; padding: 0; display: block; color: inherit; background: none; text-align: start; font: inherit; cursor: pointer; border-radius: 14px; }
+.screen-card { min-width: 0; display: flex; }
+.screen-product { width: 100%; border: 0; padding: 0; display: flex; flex-direction: column; color: inherit; background: none; text-align: start; font: inherit; cursor: pointer; border-radius: 14px; }
 .screen-product:hover .screen-product-name { text-decoration: underline; text-underline-offset: 5px; }
-.screen-photo { display: block; aspect-ratio: 4 / 3; max-height: clamp(144px, 25vh, 280px); overflow: hidden; border-radius: 14px; background: transparent; }
+.screen-photo { display: block; flex: none; width: 100%; aspect-ratio: 4 / 3; max-height: clamp(144px, 25vh, 280px); overflow: hidden; border-radius: 14px; background: transparent; }
 .screen-photo img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .screen-photo.has-no-photo { display: grid; place-items: center; background: rgba(255,255,255,.025); }
 .screen-photo img.screen-photo-mark { width: 52px; height: 62px; opacity: .15; }
-.screen-card-body { display: flex; align-items: start; flex-wrap: wrap; gap: 8px 16px; padding: 13px 0 0; }
-.screen-card-names { flex: 1; min-width: 0; }
-.screen-product-name { display: block; margin: 0; color: var(--cream-50); font: 500 clamp(18px, 1.7vw, 26px)/1.45 var(--font-body); }
-.screen-product-secondary { display: block; margin: 3px 0 0; color: var(--cream-300); font-size: clamp(14px, 1.1vw, 17px); text-align: match-parent; }
-.screen-card .price { color: var(--cream-50); font-size: clamp(21px, 2.1vw, 32px); line-height: 1.5; white-space: nowrap; }
+.screen-card-body { display: flex; flex-direction: column; align-items: stretch; flex: 1; width: 100%; gap: 8px; padding: 12px 0 0; }
+.screen-card-names { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+:root[dir="rtl"] .screen-card-names { text-align: right; }
+:root[dir="ltr"] .screen-card-names { text-align: left; }
+.screen-product-name { display: block; margin: 0; color: var(--cream-50); font: 500 clamp(18px, 1.7vw, 26px)/1.45 var(--font-body); overflow-wrap: anywhere; }
+.screen-product-secondary { display: block; margin: 0; color: var(--cream-300); font-size: clamp(14px, 1.1vw, 17px); line-height: 1.5; text-align: inherit; overflow-wrap: anywhere; }
+.screen-card .price { align-self: flex-start; margin-top: auto; color: var(--cream-50); font-size: clamp(21px, 2.1vw, 32px); line-height: 1.5; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .screen-card .price b { font-weight: 500; }
 .screen-card .price i { color: inherit; }
-.screen-sold-out { flex-basis: 100%; color: var(--cream-300); font-size: 13px; }
+.screen-sold-out { color: var(--cream-300); font-size: 13px; }
 .screen-card.is-sold-out .screen-photo { opacity: .45; }
 .screen-footer { display: flex; justify-content: flex-end; align-items: center; padding: 8px 3vw; }
 .screen-footer button { min-height: 44px; padding: 8px 0; background: none; border: 0; color: var(--cream-200); font: 400 13px var(--font-body); cursor: pointer; }
@@ -81,8 +83,7 @@ body[data-page="screen"] > #main { margin: 0; padding: 0; max-width: none; }
   .screen-main { padding-inline: 16px; }
   .screen-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 14px; }
   .screen-photo { border-radius: 10px; aspect-ratio: 1; }
-  .screen-card-body { gap: 4px; padding-top: 10px; }
-  .screen-card-names { flex-basis: 100%; }
+  .screen-card-body { gap: 8px; padding-top: 10px; }
   .screen-product-name { font-size: 17px; }
   .screen-card .price { font-size: 22px; }
   .screen-title { margin-bottom: 16px; gap: 8px; }

@@ -1,6 +1,11 @@
 # LMIT migration checks
 
 ## Photo-led refinement acceptance
+- No italic/oblique text on any public or admin route. The homepage slogan uses
+  the upright body family; verify both languages, login and detail dialogs.
+- Counter product names stack above a separate price row, with both language
+  lines sharing the correct alignment. Prices align across each row of cards;
+  long names wrap without colliding with prices or changing photo sizes.
 - Counter products open an enlarged, uncropped photo with both names, price and
   the saved description. An explicit "Click here to go back" button closes it,
   restores focus and preserves the menu's scroll position. Escape also closes.

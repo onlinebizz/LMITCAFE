@@ -180,7 +180,7 @@ a.led-row:hover .led-k { color: var(--brass-700); }
 
 /* login */
 .login { min-height: 100vh; display: grid; } @media (min-width: 900px) { .login { grid-template-columns: 1fr 1fr; } }
-.login-art { background: var(--forest-900); color: var(--cream-100); display: grid; place-content: center; justify-items: center; gap: 1.2rem; padding: 2.5rem 1.5rem; text-align: center; } .login-art img { width: 200px; height: auto; } .login-art-line { font-family: var(--font-display); font-style: italic; font-size: 1.3rem; color: var(--brass-300); } :lang(ar) .login-art-line { font-style: normal; font-family: var(--font-ar-display); }
+.login-art { background: var(--forest-900); color: var(--cream-100); display: grid; place-content: center; justify-items: center; gap: 1.2rem; padding: 2.5rem 1.5rem; text-align: center; } .login-art img { width: 200px; height: auto; } .login-art-line { font-family: var(--font-body); font-style: normal; font-size: 1.3rem; color: var(--brass-300); } :lang(ar) .login-art-line { font-style: normal; font-family: var(--font-body); }
 @media (min-width: 900px) { .login-art img { width: 320px; } .login-art-line { font-size: 1.7rem; } }
 .login-main { display: grid; place-content: center; padding: 2rem 1.2rem; position: relative; } .login-lang { position: absolute; top: .8rem; inset-inline-end: .8rem; }
 .login-form { width: min(400px, 100%); display: grid; gap: 1rem; } .login-title { font-size: 2rem; color: var(--forest-800); outline: none; } .login-sub { color: var(--ink-700); }
