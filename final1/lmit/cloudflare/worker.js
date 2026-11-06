@@ -2,7 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { requestContext } from './context.js';
 import { requestBridge, responseBridge } from './bridge.js';
 import { all, one } from './db.js';
-import { pruneSessions } from './auth.js';
+import { pruneSessions, bootstrapOwner, basicCredentials, login, sameOrigin } from './auth.js';
 import { HttpError, json, send } from '../.cloudflare/server/http.js';
 import * as admin from '../.cloudflare/server/api-admin.js';
 import * as publicApi from '../.cloudflare/server/api-public.js';
@@ -72,6 +72,18 @@ export class Cafe extends DurableObject {
     const res = responseBridge(request, headers);
     try {
       if (!['GET', 'POST', 'PUT', 'DELETE', 'HEAD'].includes(request.method)) throw new HttpError(405, 'method', 'Method not allowed.');
+      if (request.method === 'POST' && url.pathname === '/api/admin/bootstrap') {
+        json(req, res, 200, await bootstrapOwner(req));
+        return res.toResponse();
+      }
+      // Secure credential proxies can verify login without copying passwords
+      // into command arguments or request-body files. The browser uses JSON.
+      if (request.method === 'POST' && url.pathname === '/api/admin/login' && /^Basic /i.test(req.headers.authorization || '')) {
+        sameOrigin(req);
+        const credentials = basicCredentials(req);
+        json(req, res, 200, await login(req, res, credentials.email, credentials.password));
+        return res.toResponse();
+      }
       // This remains closed even if an old backup contains enabled orders.
       if (url.pathname === '/api/orders' && request.method === 'POST') throw new HttpError(403, 'orders_closed', 'Online orders are not open right now.');
       if (url.pathname.startsWith('/media/')) return await this.media(request, res);

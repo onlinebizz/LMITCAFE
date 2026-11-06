@@ -13,6 +13,9 @@ binding = "ASSETS"
 html_handling = "none"
 run_worker_first = ["/api/*", "/media/*", "/admin", "/admin/", "/healthz"]
 
+[durable_objects]
+code_update_strategy = { mode = "immediate" }
+
 [[durable_objects.bindings]]
 name = "CAFE"
 class_name = "Cafe"

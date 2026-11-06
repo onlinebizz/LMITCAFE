@@ -45,6 +45,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   const email = 'worker-test@example.invalid';
   const password = crypto.randomBytes(18).toString('hex');
   const changedPassword = crypto.randomBytes(18).toString('hex');
+  const setupKey = crypto.randomBytes(32).toString('hex');
   const base = 'http://127.0.0.1:8790';
   let child;
   let logs = '';
@@ -54,7 +55,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   async function start() {
     child = spawn(process.execPath, [
       'node_modules/wrangler/bin/wrangler.js', 'dev', '--local', '--ip', '127.0.0.1', '--port', '8790',
-      '--persist-to', dir, '--var', `ADMIN_EMAIL:${email}`, '--var', `ADMIN_PASSWORD:${password}`,
+      '--persist-to', dir, '--var', `ADMIN_EMAIL:${email}`, '--var', `ADMIN_PASSWORD:${password}`, '--var', `ADMIN_SETUP_KEY:${setupKey}`,
     ], { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, WRANGLER_SEND_METRICS: 'false' } });
     child.stdout.on('data', (data) => { logs += data; });
     child.stderr.on('data', (data) => { logs += data; });
@@ -110,6 +111,13 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
       const { data } = await request('/api/menu');
       assert.equal(data.categories.length, 5);
       assert.equal(data.categories.flatMap((c) => c.products).length, 41);
+    });
+    await t.test('Owner setup requires its secret and becomes permanently unavailable after account creation', async () => {
+      const authorization = `Basic ${Buffer.from(`${email}:${password}`).toString('base64')}`;
+      assert.equal((await request('/api/admin/bootstrap', { method: 'POST', auth: false, headers: { authorization } })).status, 403);
+      assert.equal((await request('/api/admin/bootstrap', { method: 'POST', auth: false, headers: { authorization, 'x-setup-key': setupKey } })).status, 200);
+      assert.equal((await request('/api/admin/bootstrap', { method: 'POST', auth: false, headers: { authorization, 'x-setup-key': setupKey } })).status, 409);
+      assert.equal((await request('/api/admin/login', { method: 'POST', auth: false, headers: { authorization } })).status, 200);
     });
     await t.test('Login, unknown account, CSRF and same-origin protections', async () => {
       assert.equal((await request('/api/admin/me', { auth: false })).status, 401);

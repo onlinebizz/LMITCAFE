@@ -34,6 +34,32 @@ export async function verifyPassword(password, stored) {
   return actual.length === wanted.length && crypto.timingSafeEqual(actual, wanted);
 }
 
+export function basicCredentials(req) {
+  const header = req.headers.authorization || '';
+  if (!/^Basic /i.test(header) || header.length > 1500) throw new HttpError(401, 'unauthorized', 'Valid owner credentials are required.');
+  const decoded = Buffer.from(header.slice(6), 'base64').toString('utf8');
+  const separator = decoded.indexOf(':');
+  if (separator < 1) throw new HttpError(401, 'unauthorized', 'Valid owner credentials are required.');
+  const email = decoded.slice(0, separator).trim().toLowerCase();
+  const password = decoded.slice(separator + 1);
+  if (email.length > 120 || !/^[^\s@]+@[^\s@]+$/.test(email)) throw new HttpError(400, 'invalid', 'Use an email-shaped login ID.');
+  return { email, password };
+}
+export async function bootstrapOwner(req) {
+  sameOrigin(req);
+  rateLimit(`setup:${clientIp(req)}`, 5, 15 * 60000);
+  if (one('SELECT id FROM users LIMIT 1')) throw new HttpError(409, 'already_setup', 'An owner already exists. Sign in instead.');
+  const expected = current().env.ADMIN_SETUP_KEY;
+  if (!expected || expected.length < 32 || !same(sha(req.headers['x-setup-key'] || ''), sha(expected))) throw new HttpError(403, 'forbidden', 'Owner setup is not authorized.');
+  const { email, password } = basicCredentials(req);
+  const hash = await hashPassword(password);
+  tx(() => {
+    if (one('SELECT id FROM users LIMIT 1')) throw new HttpError(409, 'already_setup', 'An owner already exists.');
+    run('INSERT INTO users(email,pass) VALUES(?,?)', email, hash);
+  });
+  return { ok: true, user: { email } };
+}
+
 // Persist rate limits so eviction and isolate restarts cannot reset a login lockout.
 export function rateLimit(key, max, windowMs) {
   const now = Date.now();
