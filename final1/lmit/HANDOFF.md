@@ -1,6 +1,8 @@
 # LMIT website: project handoff
 
-Zero dependency Node 22 project (built-in server and SQLite). No npm install needed.
+Production uses Cloudflare Workers Free with a SQLite-backed Durable Object.
+Read the repository root README.md for deployment, owner secrets and regression
+tests. The original zero-dependency Node 22 server remains a local fallback.
 
 ## Run
     node --no-warnings server/index.js          # http://localhost:3000
@@ -16,12 +18,16 @@ First start seeds the database from seed/ (needs python3 with Pillow for image r
 - Brand: real logo cut from the owner's screenshot (public/brand), fonts (public/fonts, SIL OFL), tokens.css
 - Settings seeded: hours from the cafe's story, tagline lines from the cafe's own signage
 
-## Not written yet (in this order)
-1. public/css/site.css (all customer styling; pages are unstyled until it exists)
-2. public/js/menu.js (menu search, category rail, product sheet, cart, counter slip, order send)
-3. public/admin/ (index.html, admin.css, admin.js): the owner dashboard against server/api-admin.js
-4. tests/run.js, README for the owner, Dockerfile
-5. Browser testing at phone and desktop sizes, Arabic and English
+## Current implementation
+- public/css/site.css and public/js/menu.js implement the branded public site,
+  search, categories and product sheets.
+- public/admin/ implements the bilingual owner dashboard.
+- cloudflare/ adapts persistence, authentication, media and the HTTP boundary.
+- The root wrangler.toml builds and deploys both public pages and the admin API.
+- tests/cloudflare.test.js checks the actual local Workers runtime, including
+  authentication, edits, upload validation, rate limits and restart persistence.
+- Production owner sign-in requires ADMIN_EMAIL and ADMIN_PASSWORD secrets.
+- Online order submission remains disabled.
 
 ## Owner must confirm
 Phone number, exact address, opening hours (story was 6 weeks old), V60 and Espresso items, Instagram handle, whether online ordering is wanted, original product photos (current dessert photos are small crops from the menu photo).

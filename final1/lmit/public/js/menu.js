@@ -13,6 +13,10 @@ const none = document.getElementById('no-results');
 const money = (n) => `${fmt(n)} ${t(lang, 'sar')}`;
 
 function el(tag, attrs, ...kids) {
+  if (attrs === null || typeof attrs !== 'object' || attrs instanceof Node || Array.isArray(attrs)) {
+    kids.unshift(attrs);
+    attrs = {};
+  }
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
     if (v === null || v === undefined || v === false) continue;
@@ -117,9 +121,9 @@ function openProduct(pid) {
     add.replaceChildren(el('span', t(lang, 'add_to_order')), el('b', ` ${money(unit * qty)}`));
   };
   const body = [];
-  if (p.image && p.image.widths && p.image.widths.length) {
-    const w = p.image.widths;
-    const src = `/media/${p.image.key}-${w[w.length - 1]}.webp`;
+  if (p.image) {
+    const w = p.image.widths || [];
+    const src = w.length ? `/media/${p.image.key}-${w[w.length - 1]}.webp` : `/media/${p.image.key}-orig.${p.image.ext}`;
     body.push(el('div', { class: 'pd-img' }, el('img', { src, alt: '', width: p.image.w, height: p.image.h })));
   }
   body.push(el('p', { class: 'pd-price' }, money(p.price)));

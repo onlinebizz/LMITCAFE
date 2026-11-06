@@ -2,6 +2,12 @@
 
 Project: LMIT cafe, Al Sad, Al Namas, Saudi Arabia. Customer site, digital menu, admin dashboard. Read PROMPT.md first.
 
+Production now targets Cloudflare Workers Free. Read the root README.md and
+wrangler.toml before deployment work. The original Node server is retained as a
+local fallback. Workers adapters live in cloudflare/; shared routes and validation
+are built from server/ by scripts/build-cloudflare.js. Never edit generated
+.cloudflare/ files. Wrangler is deployment tooling, not an application dependency.
+
 ## Never
 - Use em or en dashes anywhere (UI, copy, code comments, metadata). Search for them before finishing.
 - Write litotes, "not just X but Y", or generic AI marketing copy.

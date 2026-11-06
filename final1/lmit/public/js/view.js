@@ -54,7 +54,10 @@ export const S = {
     am: 'AM', pm: 'PM', closed: 'Closed',
   },
 };
-export const t = (lang, key, vars = {}) => String(S[lang][key] ?? key).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+export const t = (lang, key, vars = {}) => {
+  const value = S[lang][key] ?? key;
+  return Array.isArray(value) ? value : String(value).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+};
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const dir = (lang) => (lang === 'ar' ? 'rtl' : 'ltr');

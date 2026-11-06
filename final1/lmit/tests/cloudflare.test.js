@@ -7,8 +7,9 @@ import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { deflateSync } from 'node:zlib';
+import { t as text, renderHours } from '../public/js/view.js';
 
-function png() {
+function png(width = 1, height = 1, random = false) {
   const chunk = (type, data) => {
     const body = Buffer.concat([Buffer.from(type), data]);
     let crc = 0xffffffff;
@@ -21,13 +22,23 @@ function png() {
     return Buffer.concat([head, body, tail]);
   };
   const header = Buffer.alloc(13);
-  header.writeUInt32BE(1, 0); header.writeUInt32BE(1, 4);
+  header.writeUInt32BE(width, 0); header.writeUInt32BE(height, 4);
   header[8] = 8; header[9] = 6;
+  const pixels = random ? crypto.randomBytes((width * 4 + 1) * height) : Buffer.from([0, 8, 37, 25, 255]);
+  if (random) for (let row = 0; row < height; row++) pixels[row * (width * 4 + 1)] = 0;
   return Buffer.concat([
     Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
-    chunk('IHDR', header), chunk('IDAT', deflateSync(Buffer.from([0, 8, 37, 25, 255]))), chunk('IEND', Buffer.alloc(0)),
+    chunk('IHDR', header), chunk('IDAT', deflateSync(pixels)), chunk('IEND', Buffer.alloc(0)),
   ]);
 }
+
+test('Weekday translations stay arrays and render complete day names', () => {
+  assert.equal(text('en', 'days')[0], 'Sunday');
+  assert.equal(text('ar', 'days')[5], 'الجمعة');
+  const hours = { hours: Array.from({ length: 7 }, (_, day) => ({ day, closed: false, ranges: [{ open: '06:00', close: '23:00' }] })) };
+  assert.match(renderHours(hours, 'en'), /Saturday to Friday/);
+  assert.match(renderHours(hours, 'ar'), /السبت إلى الجمعة/);
+});
 
 test('Cloudflare runtime preserves the public site and owner dashboard', { timeout: 180000 }, async (t) => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'lmit-worker-test-'));
@@ -39,6 +50,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   let logs = '';
   let cookie = '';
   let csrf = '';
+  let persistentImage;
   async function start() {
     child = spawn(process.execPath, [
       'node_modules/wrangler/bin/wrangler.js', 'dev', '--local', '--ip', '127.0.0.1', '--port', '8790',
@@ -162,6 +174,17 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
         assert.equal((await request('/api/admin/media', { method: 'POST', body: form })).status, 422);
       }
     });
+    await t.test('Photos larger than one SQLite chunk are stored intact', async () => {
+      const data = png(300, 700, true);
+      assert.ok(data.length > 512 * 1024);
+      const form = new FormData();
+      form.set('file', new Blob([data], { type: 'image/png' }), 'multi-chunk.png');
+      const uploaded = await request('/api/admin/media', { method: 'POST', body: form });
+      assert.equal(uploaded.status, 200, JSON.stringify(uploaded.data));
+      persistentImage = { url: `/media/${uploaded.data.media.key}-orig.png`, data };
+      const result = await fetch(base + persistentImage.url);
+      assert.deepEqual(Buffer.from(await result.arrayBuffer()), data);
+    });
     await t.test('Settings and promotions save while orders remain disabled', async () => {
       const original = (await request('/api/admin/settings')).data.settings;
       const update = await request('/api/admin/settings', { method: 'PUT', body: {
@@ -189,6 +212,9 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
       await start();
       assert.equal((await request('/api/site')).data.business.address_en, 'Persistence test address');
       assert.equal((await request('/api/admin/me')).status, 200);
+      const image = await fetch(base + persistentImage.url);
+      assert.equal(image.status, 200);
+      assert.deepEqual(Buffer.from(await image.arrayBuffer()), persistentImage.data);
       await login(changedPassword);
     });
     await t.test('Content export and overview work without exposing authentication secrets', async () => {
