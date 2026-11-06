@@ -23,7 +23,7 @@ export const S = {
     order_sent: 'وصل طلبك', order_number: 'رقم طلبك', order_show: 'اعرض هذا الرقم عند الاستلام.',
     unavailable_in_cart: 'غير متوفر الآن', pick_option: 'اختر أحد الخيارات', price_from: 'يبدأ من',
     err_generic: 'تعذر إكمال الطلب. حاول مرة ثانية.', err_name: 'اكتب اسمك لإرسال الطلب.', err_offline: 'لا يوجد اتصال. تحقق من الإنترنت وحاول مرة ثانية.',
-    sar: 'ر.س', rights: 'جميع الحقوق محفوظة', top: 'إلى الأعلى',
+    sar: '\u20c1', rights: 'جميع الحقوق محفوظة', top: 'إلى الأعلى',
     not_found_title: 'الصفحة غير موجودة', not_found_text: 'ربما تغيّر الرابط. القائمة تبدأ من هنا.',
     days: ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
     am: 'ص', pm: 'م', closed: 'مغلق',
@@ -48,7 +48,7 @@ export const S = {
     order_sent: 'Order received', order_number: 'Your order number', order_show: 'Show this number when you pick up.',
     unavailable_in_cart: 'Sold out now', pick_option: 'Choose one option', price_from: 'From',
     err_generic: 'The order could not be completed. Try again.', err_name: 'Enter your name to send the order.', err_offline: 'No connection. Check your internet and try again.',
-    sar: 'SR', rights: 'All rights reserved', top: 'Back to top',
+    sar: '\u20c1', rights: 'All rights reserved', top: 'Back to top',
     not_found_title: 'Page not found', not_found_text: 'The link may have changed. The menu starts here.',
     days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     am: 'AM', pm: 'PM', closed: 'Closed',
@@ -75,7 +75,7 @@ export function names(o, lang, key = 'name') {
 const sec = (n) => (n.s ? `<span class="n2" lang="${n.sl}" dir="${dir(n.sl)}">${esc(n.s)}</span>` : '');
 
 export const fmt = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
-export const priceHtml = (n, lang) => `<span class="price"><b>${fmt(n)}</b> <i>${esc(t(lang, 'sar'))}</i></span>`;
+export const priceHtml = (n, lang) => `<span class="price" dir="ltr"><i class="riyal" aria-label="${lang === 'ar' ? 'ريال سعودي' : 'Saudi riyals'}">${esc(t(lang, 'sar'))}</i> <b>${fmt(n)}</b></span>`;
 
 // ---------- images ----------
 const mediaUrl = (img, w) => (img.widths && img.widths.length ? `/media/${img.key}-${w}.webp` : `/media/${img.key}-orig.${img.ext}`);
@@ -322,15 +322,14 @@ export function renderRail(cats, lang) {
 function itemRow(p, lang) {
   const n = names(p, lang);
   const d = lang === 'ar' ? p.desc_ar || p.desc_en : p.desc_en || p.desc_ar;
-  const thumb = p.image ? `<span class="thumb${p.image.w >= 500 ? ' is-big' : ''}">${imgHtml(p.image, { lang, sizes: '88px', decorative: true })}</span>` : '';
+  const thumb = p.image ? `<span class="menu-photo">${imgHtml(p.image, { lang, sizes: '(min-width:1100px) 340px, (min-width:700px) 30vw, 50vw' })}</span>` : `<span class="menu-photo no-photo" aria-label="${lang === 'ar' ? 'لم تضف صورة لهذا الصنف' : 'Product photo not added yet'}"><img src="/brand/logo-mark-forest.png" alt="" width="80" height="80"><small>LMIT</small></span>`;
   const flags = `${p.bestseller ? `<span class="tag tag-best">${esc(t(lang, 'bestseller'))}</span>` : ''}${!p.available ? `<span class="tag tag-out">${esc(t(lang, 'sold_out'))}</span>` : ''}`;
   const text = `${n.p} ${n.s}`.toLowerCase();
   return `<li class="item${p.available ? '' : ' is-out'}" id="p-${p.id}" data-pid="${p.id}" data-text="${esc(text)}">
     <button type="button" class="item-open" data-open="${p.id}" aria-haspopup="dialog" aria-label="${esc(t(lang, 'details', { n: n.p }))}">
       ${thumb}<span class="item-text"><span class="n1">${esc(n.p)}</span>${sec(n)}${d ? `<span class="item-desc">${esc(d)}</span>` : ''}${flags ? `<span class="flags">${flags}</span>` : ''}</span>
-      <span class="leader" aria-hidden="true"></span>${priceHtml(p.price, lang)}
+      <span class="item-bottom">${priceHtml(p.price, lang)}<span class="item-detail-hint">${lang === 'ar' ? 'التفاصيل' : 'Details'} ${ICON.arrow}</span></span>
     </button>
-    <button type="button" class="add" data-add="${p.id}" ${p.available ? '' : 'disabled'} aria-label="${esc(t(lang, 'add_aria', { n: n.p }))}">${ICON.plus}</button>
   </li>`;
 }
 

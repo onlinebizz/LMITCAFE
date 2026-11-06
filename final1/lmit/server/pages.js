@@ -87,7 +87,8 @@ function menuPage(lang) {
     const cats = publicMenu();
     const main = `<section class="menu-top">
   <h1 class="menu-title">${esc(t(lang, 'menu_title'))}</h1>
-  <label class="search"><span class="sr">${esc(t(lang, 'search_label'))}</span>${V.ICON.search}<input type="search" id="q" placeholder="${esc(t(lang, 'search_ph'))}" autocomplete="off" enterkeyhint="search"></label>
+  <label class="search"><span class="sr">${esc(t(lang, 'search_label'))}</span>${V.ICON.search}<input type="search" id="q" placeholder="${esc(t(lang, 'search_ph'))}" autocomplete="off" enterkeyhint="search"><button type="button" id="q-clear" hidden aria-label="${lang === 'ar' ? 'مسح البحث' : 'Clear search'}">${V.ICON.close}</button></label>
+  <p class="sr" id="result-count" role="status" aria-live="polite"></p>
 </section>
 <div class="rail-wrap"><nav class="rail" id="rail" aria-label="${esc(t(lang, 'categories'))}">${V.renderRail(cats, lang)}</nav></div>
 <div class="menu" id="menu-root">${V.renderMenuSections(cats, lang)}</div>

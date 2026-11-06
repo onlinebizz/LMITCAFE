@@ -11,7 +11,7 @@ const en = {
   save_changes: 'Save changes', changes_saved: 'Changes saved',
   discard_title: 'Leave without saving?', discard_body: 'Your changes on this page will be lost.', discard_confirm: 'Leave page', keep_editing: 'Keep editing',
   just_now: 'Just now', secs: { one: '{n} second', other: '{n} seconds' }, mins: { one: '{n} minute', other: '{n} minutes' },
-  this_field: 'This field', sar: 'SR',
+  this_field: 'This field', sar: '\u20c1',
 
   err_required: '{field} is required.', err_invalid: '{field} is not valid.', err_too_long: '{field} is too long.',
   err_rate_limited: 'Too many attempts. Try again in {wait}.', err_bad_credentials: 'The email or password is incorrect.',
@@ -126,7 +126,7 @@ const ar = {
   save_changes: 'احفظ التعديلات', changes_saved: 'تم حفظ التعديلات',
   discard_title: 'المغادرة دون حفظ؟', discard_body: 'ستضيع التعديلات التي أجريتها في هذه الصفحة.', discard_confirm: 'غادر الصفحة', keep_editing: 'تابع التعديل',
   just_now: 'الآن', secs: ar5('{n} ثانية', 'ثانية', 'ثانيتين', '{n} ثوانٍ', '{n} ثانية', '{n} ثانية'), mins: ar5('{n} دقيقة', 'دقيقة', 'دقيقتين', '{n} دقائق', '{n} دقيقة', '{n} دقيقة'),
-  this_field: 'هذا الحقل', sar: 'ر.س',
+  this_field: 'هذا الحقل', sar: '\u20c1',
 
   err_required: '{field} مطلوب.', err_invalid: 'قيمة {field} غير صحيحة.', err_too_long: 'النص في {field} أطول من المسموح.',
   err_rate_limited: 'محاولات كثيرة. حاول بعد {wait}.', err_bad_credentials: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',

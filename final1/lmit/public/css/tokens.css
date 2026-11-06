@@ -28,9 +28,9 @@
   --danger: #a63a2b;
   --ok: #2f6b45;
 
-  --font-display: 'Bodoni Moda', 'Noto Naskh Arabic', 'Baskerville', 'Times New Roman', serif;
-  --font-ar-display: 'Noto Naskh Arabic', 'Bodoni Moda', 'Traditional Arabic', serif;
-  --font-body: 'Jost', 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Bodoni Moda', 'Noto Naskh Arabic', 'LMIT Riyal', 'Baskerville', 'Times New Roman', serif;
+  --font-ar-display: 'Noto Naskh Arabic', 'Bodoni Moda', 'LMIT Riyal', 'Traditional Arabic', serif;
+  --font-body: 'Jost', 'IBM Plex Sans Arabic', 'LMIT Riyal', 'Segoe UI', system-ui, -apple-system, sans-serif;
 
   --step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
   --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);

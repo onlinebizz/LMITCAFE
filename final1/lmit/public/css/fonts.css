@@ -1,4 +1,5 @@
 /* Self-hosted, subsetted. Licences are in /fonts/licenses (SIL OFL). Arabic faces only load for Arabic glyphs. */
+@font-face { font-family: 'LMIT Riyal'; src: url('/fonts/saudi-riyal.woff') format('woff'); font-weight: 100 900; font-style: normal; font-display: block; unicode-range: U+20C1; }
 @font-face { font-family: 'Bodoni Moda'; src: url('/fonts/bodoni-moda.woff') format('woff'); font-weight: 400 900; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Jost'; src: url('/fonts/jost.woff') format('woff'); font-weight: 100 900; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Noto Naskh Arabic'; src: url('/fonts/noto-naskh-arabic.woff') format('woff'); font-weight: 400 700; font-style: normal; font-display: swap; unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+25CC; }
