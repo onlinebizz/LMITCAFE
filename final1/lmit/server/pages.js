@@ -3,6 +3,7 @@ import { send, sendCompressed, isSecure } from './http.js';
 import { publicSite, publicMenu } from './model.js';
 import { SITE_URL } from './config.js';
 import * as V from '../public/js/view.js';
+import { renderScreen } from '../public/js/display-view.js';
 
 const { esc, t } = V;
 const dirOf = (l) => (l === 'ar' ? 'rtl' : 'ltr');
@@ -43,6 +44,7 @@ ${preload.map((f) => `<link rel="preload" href="/fonts/${f}.woff" as="font" type
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/tokens.css">
 <link rel="stylesheet" href="/css/site.css">
+${page === 'screen' ? '<link rel="stylesheet" href="/css/screen.css">' : ''}
 <script type="application/ld+json">${V.jsonLd(site, lang, canon)}</script>
 </head>
 <body data-page="${page}" data-suffix="${suffix}">
@@ -109,11 +111,26 @@ export function notFound(req, res) {
   layout(req, res, { lang, page: 'lost', suffix: '/', site, script: '/js/home.js', main, title: titleOf(site, lang, t(lang, 'not_found_title')), desc: '', status: 404 });
 }
 
+function screenPage(lang) {
+  return ({ req, res }) => {
+    const site = publicSite();
+    const categories = publicMenu();
+    layout(req, res, {
+      lang, page: 'screen', suffix: '/screen', site, script: '/js/screen.js',
+      main: renderScreen(site, categories, lang, originOf(req)),
+      title: titleOf(site, lang, lang === 'ar' ? 'شاشة القائمة' : 'Counter display'),
+      desc: descOf(site, lang), boot: { site, categories },
+    });
+  };
+}
+
 export function register(add) {
   add('GET', '/', homePage('ar'));
   add('GET', '/en', homePage('en'));
   add('GET', '/menu', menuPage('ar'));
   add('GET', '/en/menu', menuPage('en'));
+  add('GET', '/screen', screenPage('ar'));
+  add('GET', '/en/screen', screenPage('en'));
   add('GET', '/robots.txt', ({ req, res }) => {
     send(res, 200, `User-agent: *\nDisallow: /admin\nDisallow: /api/\nSitemap: ${originOf(req)}/sitemap.xml\n`, { 'Content-Type': 'text/plain; charset=utf-8' });
   });

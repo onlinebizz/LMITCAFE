@@ -8,6 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { deflateSync } from 'node:zlib';
 import { t as text, renderHours } from '../public/js/view.js';
+import { displayPages, displayPanel } from '../public/js/display-view.js';
 
 function png(width = 1, height = 1, random = false) {
   const chunk = (type, data) => {
@@ -38,6 +39,16 @@ test('Weekday translations stay arrays and render complete day names', () => {
   const hours = { hours: Array.from({ length: 7 }, (_, day) => ({ day, closed: false, ranges: [{ open: '06:00', close: '23:00' }] })) };
   assert.match(renderHours(hours, 'en'), /Saturday to Friday/);
   assert.match(renderHours(hours, 'ar'), /السبت إلى الجمعة/);
+});
+test('Counter display paginates every product without losing category boundaries', () => {
+  const products = Array.from({ length: 11 }, (_, index) => ({ id: index + 1, name_ar: `صنف ${index + 1}`, name_en: `Item ${index + 1}`, price: 10, available: true }));
+  const categories = [{ id: 1, name_ar: 'ساخن', name_en: 'Hot', products }, { id: 2, name_ar: 'فارغ', products: [] }];
+  assert.deepEqual(displayPages(categories, 6).map((page) => page.items.length), [6, 5]);
+  assert.deepEqual(displayPages(categories, 4).map((page) => page.items.length), [4, 4, 3]);
+  const markup = displayPanel(displayPages(categories, 6)[0], 'ar');
+  assert.match(markup, /ريال سعودي/);
+  assert.doesNotMatch(markup, /data-add|cart-bar/);
+  assert.deepEqual(displayPages([], 6), []);
 });
 
 test('Cloudflare runtime preserves the public site and owner dashboard', { timeout: 180000 }, async (t) => {
@@ -96,10 +107,13 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   try {
     await start();
     await t.test('Arabic and English home/menu, static assets and localized 404s', async () => {
-      for (const [url, lang, dir] of [['/', 'ar', 'rtl'], ['/en', 'en', 'ltr'], ['/menu', 'ar', 'rtl'], ['/en/menu', 'en', 'ltr']]) {
+      for (const [url, lang, dir] of [['/', 'ar', 'rtl'], ['/en', 'en', 'ltr'], ['/menu', 'ar', 'rtl'], ['/en/menu', 'en', 'ltr'], ['/screen', 'ar', 'rtl'], ['/en/screen', 'en', 'ltr']]) {
         const response = await fetch(base + url);
         assert.equal(response.status, 200, url);
-        assert.match(await response.text(), new RegExp(`<html lang="${lang}" dir="${dir}">`));
+        const html = await response.text();
+        assert.match(html, new RegExp(`<html lang="${lang}" dir="${dir}">`));
+        if (url.includes('menu')) { assert.doesNotMatch(html, /data-add=|id="cart-bar"/); assert.match(html, /class="menu-photo/); }
+        if (url.includes('screen')) assert.match(html, /screen-pause/);
         assert.match(response.headers.get('content-security-policy'), /script-src 'self'/);
       }
       for (const url of ['/admin', '/admin/', '/admin/admin.js', '/css/site.css', '/fonts/jost.woff']) {
