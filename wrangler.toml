@@ -1,4 +1,4 @@
-name = "lmitcafe"
+name = "l"
 main = "final1/lmit/cloudflare/worker.js"
 compatibility_date = "2026-11-06"
 compatibility_flags = ["nodejs_compat"]

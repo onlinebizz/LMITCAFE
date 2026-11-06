@@ -1,6 +1,10 @@
 # Never copy local credentials or live customer data into the image.
 .env
 .env.*
+.dev.vars
+.dev.vars.*
+.wrangler/
+.cloudflare/
 data/
 **/*.db
 **/*.db-*

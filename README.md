@@ -10,7 +10,8 @@ Connect this repository in Workers Builds with the repository root as the root
 directory. Use `npx wrangler deploy` as the deploy command. No separate build
 command is necessary: `wrangler.toml` runs `npm run build` before deployment.
 Use Node 22.13 or newer. The Worker name in Cloudflare must match
-`name = "lmitcafe"` in `wrangler.toml`.
+`name = "l"` in `wrangler.toml`. The current live address is
+[l.lmitcafe.workers.dev](https://l.lmitcafe.workers.dev).
 
 Wrangler is a development and deployment tool only. There are no third-party
 application libraries, external CDNs or remotely loaded fonts in the site.
