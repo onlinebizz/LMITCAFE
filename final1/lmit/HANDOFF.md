@@ -41,6 +41,10 @@ command-line passwords. Production and this local Node fallback are separate dat
   and removes the temporary secret after provisioning.
 - Durable Object code updates are immediate; do not rename `lmit-primary`.
 - Online order submission remains disabled.
+- Deployment warning: automatic GitHub builds still reject the saved build token
+  as deleted/rolled. The live app was deployed through the secure API fallback.
+  Replace the token in Worker Settings → Builds → API token before relying on
+  automatic deployment. See the root README.
 
 ## Owner must confirm
 Phone number, exact address, opening hours (story was 6 weeks old), V60 and Espresso items,

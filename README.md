@@ -76,6 +76,17 @@ It creates a random one-time setup secret, provisions only an empty installation
 verifies sign-in, and deletes that setup secret. Passwords and session tokens
 stay in process memory. Existing owner accounts are never reset.
 
+### Automatic builds need a token refresh
+
+As of 2026-11-06, the live app has been deployed through the API fallback.
+The GitHub-triggered Workers Build still fails before deployment with:
+“The build token selected for this build has been deleted or rolled.”
+The currently valid API credential does not refresh the secret already saved
+in Workers Builds. In this Worker's **Settings → Builds → API token**, replace
+the saved build token and retry the build. Do not revoke the working API token
+or change the Durable Object identity. Until this is repaired, a pushed commit
+is saved in GitHub but is not automatically deployed.
+
 ## Storage and the free plan
 
 One named Durable Object, `lmit-primary`, holds the menu, site settings, sessions,
