@@ -52,6 +52,8 @@ body[data-page="screen"] > #main { margin: 0; padding: 0; max-width: none; }
 .counter-detail-copy { align-self: center; min-width: 0; }
 .counter-detail-copy h2 { margin: 0; color: var(--forest-950); font: 500 clamp(25px, 3vw, 42px)/1.4 var(--font-body); overflow-wrap: anywhere; }
 .counter-detail-secondary { margin-top: 8px; font-size: 18px; color: var(--forest-700); text-align: match-parent; }
+:root[dir="rtl"] .counter-detail-secondary { text-align: right; }
+:root[dir="ltr"] .counter-detail-secondary { text-align: left; }
 .counter-detail-copy .price { margin-top: 20px; font-size: clamp(30px, 4vw, 52px); color: var(--forest-900); }
 .counter-detail-copy .price b { font-weight: 500; }
 .counter-detail-copy .price i { color: inherit; }
