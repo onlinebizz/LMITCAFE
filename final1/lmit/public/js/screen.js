@@ -4,6 +4,12 @@ import { openCounterDetail, counterDetailMarkup } from './counter-detail.js';
 
 const lang = document.documentElement.lang;
 const boot = JSON.parse(document.getElementById('boot').textContent);
+// A pointer tap must not leave a lingering focus frame on the tapped control.
+// The brass outline returns as soon as a keyboard is used again.
+const markPointerUse = () => document.documentElement.classList.add('using-pointer');
+document.addEventListener('pointerdown', markPointerUse, { capture: true, passive: true });
+document.addEventListener('mousedown', markPointerUse, { capture: true, passive: true });
+document.addEventListener('keydown', () => document.documentElement.classList.remove('using-pointer'), { capture: true });
 let categories = boot.categories || [];
 const panel = document.getElementById('screen-panel');
 const nav = document.getElementById('screen-categories');

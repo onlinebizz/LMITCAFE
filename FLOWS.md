@@ -119,3 +119,11 @@ from the original Node server. The existing application is the design baseline.
 - Deploys now work through the Cloudflare API with `npx wrangler deploy`
   (CLOUDFLARE_API_TOKEN), so GitHub-integrated Workers Builds is not required
   for manual deployments.
+
+## Counter screen focus frame fix, 2026-11-07
+- Tapping a product, category or control on `/screen` used to leave the brass
+  focus frame on it until something else was clicked. Pointer and touch use
+  now marks the page so the visible outline is suppressed; any keyboard use
+  removes the mark and the outline returns for keyboard visitors. Scoped to
+  the counter screen script and stylesheet; no other routes changed.
+  Local Workers suite: 19 tests passed.

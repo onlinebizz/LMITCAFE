@@ -45,6 +45,12 @@ body[data-page="screen"] > #main { margin: 0; padding: 0; max-width: none; }
 .screen-footer button { min-height: 44px; padding: 8px 0; background: none; border: 0; color: var(--cream-200); font: 400 13px var(--font-body); cursor: pointer; }
 .screen-category:hover, .screen-footer button:hover { color: var(--brass-300); }
 .screen-main:focus-visible, .counter-screen button:focus-visible, .screen-language:focus-visible { outline: 2px solid var(--brass-300); outline-offset: -2px; }
+/* A pointer tap must not leave a lingering focus frame on the counter screen.
+   The outline returns as soon as the visitor uses a keyboard again. */
+html.using-pointer .screen-main:focus-visible,
+html.using-pointer .counter-screen button:focus-visible,
+html.using-pointer .screen-language:focus-visible,
+html.using-pointer .counter-detail-footer button:focus-visible { outline: none; }
 .screen-empty { padding: 40px 0; font-size: 25px; }
 .counter-detail { width: min(1120px, calc(100vw - 40px)); max-width: none; max-height: calc(100svh - 32px); margin: auto; padding: 0; border: 0; border-radius: 16px; background: var(--cream-50); color: var(--forest-950); overflow: auto; box-shadow: 0 24px 80px rgba(0,0,0,.35); scrollbar-color: var(--brass-600) var(--cream-100); }
 .counter-detail::backdrop { background: rgba(1,16,10,.86); }
