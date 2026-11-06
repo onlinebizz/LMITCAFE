@@ -40,6 +40,7 @@ test('Typography is upright and counter names and prices have consistent rows', 
     .map((file) => readFile(new URL(`../public/${file}`, import.meta.url), 'utf8')));
   for (const file of css) assert.doesNotMatch(file, /font-style:\s*(italic|oblique)/);
   assert.match(css[0], /font-style:\s*normal\s*!important/);
+  assert.match(css[1], /h1\.hero-title\s*\{[^}]*font-family:\s*var\(--font-body\)/);
   assert.match(css[2], /\.screen-card-body\s*\{[^}]*flex-direction:\s*column/);
   assert.match(css[2], /\.screen-card \.price\s*\{[^}]*margin-top:\s*auto/);
   assert.match(css[2], /:root\[dir="rtl"\] \.screen-card-names\s*\{\s*text-align:\s*right/);
