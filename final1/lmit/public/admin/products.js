@@ -134,7 +134,7 @@ const list = {
       const li = h('li', { class: `prow ${p.available ? '' : 'is-off'}`, 'data-id': p.id, 'data-accent': cat ? cat.accent : 'brass' },
         h('div', { class: 'p-thumb' }, p.image ? imgEl(p.image, { sizes: '56px', w: 100, alt: '' }) : ic('cup')),
         h('div', { class: 'p-names' }, h('b', { class: 'p-n1', dir: 'auto' }, nm), sec ? h('span', { class: 'p-n2', dir: 'auto' }, sec) : null),
-        h('div', { class: 'p-price' }, h('button', { type: 'button', class: 'price-btn', 'aria-label': t('edit_price_of', { name: nm, price: moneyUnit(p.price) }), on: { click: () => editPrice(p, li) } }, h('b', money(p.price)), ' ', h('i', t('sar')), ic('edit'))),
+        h('div', { class: 'p-price' }, h('button', { type: 'button', class: 'price-btn', dir: 'ltr', 'aria-label': t('edit_price_of', { name: nm, price: moneyUnit(p.price) }), on: { click: () => editPrice(p, li) } }, h('i', t('sar')), ' ', h('b', money(p.price)), ic('edit'))),
         h('div', { class: 'p-flags' },
           toggle({ checked: p.available, label: t('available'), showLabel: true, cls: 'sw-avail', onChange: (v) => { li.classList.toggle('is-off', !v); return patch(p, { available: v }, t(v ? 'marked_available' : 'marked_unavailable', { name: nm })).catch((e) => { li.classList.toggle('is-off', v); throw e; }); } }),
           ),

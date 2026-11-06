@@ -21,13 +21,33 @@ It does not launch a Node server, start Python or open a local SQLite file.
 Cloudflare serves static files and runs the database-backed pages and APIs.
 See [Cloudflare's static assets documentation](https://developers.cloudflare.com/workers/static-assets/).
 
-After a successful deployment, an active Durable Object can keep running its
-previous code for up to five minutes under Cloudflare's default update strategy.
-Static files can update before database-backed page rendering does. Allow this
-rollout window before treating a mixed version as a failed deployment.
+This project sets the Durable Object code update strategy to `immediate` so the
+database-backed page renderer and static assets update together. The singleton
+object name stays `lmit-primary`; never rename it to force a deployment.
 See [Durable Objects code updates](https://developers.cloudflare.com/durable-objects/deployments/durable-objects-code-updates/).
 
-## Set up the owner account
+## Counter screen, customer menu and owner account
+
+- `/screen` is the Arabic counter display; `/en/screen` is its English version.
+  It fills the display, cycles through category pages every 15 seconds and has
+  pause, previous/next, category and fullscreen controls. Smaller screens show
+  four products; larger displays show six. `?seconds=20` changes the interval
+  within the supported 8–60 second range.
+- `/menu` and `/en/menu` are scrollable phone menus with photos, names, prices,
+  category shortcuts, search and product details. There is no cart, checkout,
+  quantity selector or add-to-cart action.
+- Prices use the official Saudi riyal outlines through a bundled local font.
+  Products without an original photo use a branded placeholder, not a fabricated
+  product photo. Upload actual product photos in the admin dashboard.
+- `/admin` opens directly on the item list after sign-in. The three primary
+  sections are Menu, Photos and Cafe settings. Category management, reordering,
+  account options and optional product details are tucked away.
+
+The production owner was provisioned on 2026-11-06 using the owner's secure
+credential form. Sign in with the username and password selected there. No
+password is committed to this repository. Account settings are under More.
+
+### Provisioning a new, empty installation
 
 In the Cloudflare dashboard, open this Worker, then **Settings**, **Variables and
 Secrets**. Add both entries as secrets:
@@ -39,7 +59,7 @@ Secrets**. Add both entries as secrets:
 
 Save the secrets and deploy the updated configuration. Open `/admin` and sign in
 with those values. The first successful sign-in creates the owner account in the
-Durable Object. There is no default account or public setup endpoint.
+Durable Object. There is no default account or unauthenticated setup page.
 Do not put the password in GitHub, a `.env` file committed to Git, or a chat.
 
 After the account exists, change its password from **Account** in the dashboard.
@@ -48,6 +68,13 @@ Sessions, hashed passwords, CSRF tokens and login rate limits persist in storage
 
 If sign-in reports that setup is required, the running deployment does not have
 both secrets. A working public website does not mean an owner account exists.
+
+Alternatively, `scripts/deploy-cloudflare-api.py` deploys a Wrangler dry-run
+bundle through the official Cloudflare API. Run it through the secure credential
+wrapper; `--setup-owner` additionally uses the site's saved Basic credential.
+It creates a random one-time setup secret, provisions only an empty installation,
+verifies sign-in, and deletes that setup secret. Passwords and session tokens
+stay in process memory. Existing owner accounts are never reset.
 
 ## Storage and the free plan
 
@@ -73,8 +100,8 @@ chunks, CRCs, decompressed scanlines and size before storing it. Photos have a
 10 MB limit; a large normalized photo may need to be cropped or resized further.
 Public images and local fonts keep their existing URLs.
 
-Online order submission remains disabled. The menu's existing counter-list
-feature is not an online checkout.
+Online order submission remains disabled. The previous counter-list/cart feature
+has been removed from the customer menu entirely.
 
 ## Local checks
 

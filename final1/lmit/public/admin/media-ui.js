@@ -242,12 +242,12 @@ export function imageField({ media, onChange, purpose = '', label }) {
   const el = h('div', { class: 'imgf' }, label ? h('p', { class: 'lbl' }, label) : null, h('div', { class: 'imgf-row' }, box, actions));
   const draw = () => {
     box.replaceChildren(cur ? imgEl(cur, { sizes: '160px', w: 400, alt: altOf(cur) }) : h('span', { class: 'imgf-ph' }, ic('photo'), h('span', t('no_photo'))));
-    actions.replaceChildren(
+    actions.replaceChildren(...[
       btn([ic('photo'), cur ? t('replace_photo') : t('choose_photo')], '', async () => {
         const r = await pickImages({ purpose, title: cur ? t('replace_photo') : t('choose_photo') });
         if (r && r[0]) { cur = r[0]; draw(); onChange && onChange(cur); }
       }),
-      cur ? btn([ic('trash'), t('remove_photo')], 'btn-quiet', () => { cur = null; draw(); onChange && onChange(null); }) : null);
+      cur ? btn([ic('trash'), t('remove_photo')], 'btn-quiet', () => { cur = null; draw(); onChange && onChange(null); }) : null].filter(Boolean));
   };
   draw();
   return { el, get media() { return cur; }, set(m) { cur = m; draw(); } };

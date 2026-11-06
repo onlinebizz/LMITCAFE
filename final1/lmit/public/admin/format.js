@@ -2,7 +2,7 @@ import { fmt } from '/js/view.js';
 import { lang, t } from './i18n.js';
 
 export const money = (n) => fmt(Number(n) || 0);
-export const moneyUnit = (n) => `${money(n)} ${t('sar')}`;
+export const moneyUnit = (n) => `${t('sar')} ${money(n)}`;
 
 // Accepts Arabic-Indic digits and decimal commas. Returns NaN when the text is not a number.
 export function parseNum(s) {
