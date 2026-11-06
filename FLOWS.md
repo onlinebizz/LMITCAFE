@@ -107,3 +107,15 @@ from the original Node server. The existing application is the design baseline.
   checked. The enlarged photo uses object-fit:contain, not a cropped image.
 - Original product photos are still low-resolution; many drinks have no photo
   or description yet. Upload actual photos and write descriptions in admin.
+
+## Owner password reset, 2026-11-07
+- The owner forgot the dashboard password. A temporary one-time reset route,
+  guarded by a random key held only in the short-lived deployment, updated the
+  owner account (`lmit1100`), signed out its sessions, and was removed with a
+  clean redeploy immediately after. Sign-in with the new password was verified
+  against production before and after the cleanup deploy; `/healthz` is 200 and
+  the route now returns 404. No password or key is stored in this repository.
+- Local Workers suite: 19 tests passed on the current main after the reset.
+- Deploys now work through the Cloudflare API with `npx wrangler deploy`
+  (CLOUDFLARE_API_TOKEN), so GitHub-integrated Workers Builds is not required
+  for manual deployments.
