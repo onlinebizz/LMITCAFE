@@ -5,7 +5,7 @@ import { h, ic, pageHead, field, selectField, toggle, btn, toast, setDirty, clea
 import { pickName } from './format.js';
 import { imageField, imgEl, pickImages, altOf } from './media-ui.js';
 
-const SUBS = ['home', 'business', 'hours', 'announcement', 'search'];
+const SUBS = ['hours', 'business', 'home', 'announcement', 'search'];
 const ICONS = ['friends', 'calm', 'oxygen', 'bean', 'leaf', 'cup'];
 const DAY_ORDER = [6, 0, 1, 2, 3, 4, 5];
 

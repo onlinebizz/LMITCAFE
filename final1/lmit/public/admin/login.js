@@ -3,7 +3,7 @@ import { t, tn, errorText, lang, setLang } from './i18n.js';
 import { h, ic, field } from './ui.js';
 
 export function showLogin(app, { message = '', done }) {
-  const email = field({ label: t('email'), name: 'email', type: 'email', dir: 'ltr', autocomplete: 'username', required: true, max: 200 });
+  const email = field({ label: t('login_id'), name: 'email', type: 'text', dir: 'ltr', autocomplete: 'username', required: true, max: 120 });
   const pass = field({ label: t('password'), name: 'password', type: 'password', dir: 'ltr', autocomplete: 'current-password', required: true, max: 200 });
   const eye = h('button', { type: 'button', class: 'icon-btn eye', 'aria-label': t('show_password'), 'aria-pressed': 'false' }, ic('eye'));
   eye.addEventListener('click', () => {

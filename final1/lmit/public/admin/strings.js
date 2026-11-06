@@ -2,6 +2,10 @@
 const ar5 = (zero, one, two, few, many, other) => ({ zero, one, two, few, many, other });
 
 const en = {
+  login_id: 'Username or email',
+  open_screen: 'Open counter screen', open_customer_menu: 'Open phone menu',
+  extra_settings: 'More settings', optional_details: 'Extra details (optional)',
+  arrange_menu: 'Arrange items', menu_help: 'Change a price, add a photo or mark an item sold out. Both menus update automatically.',
   brand: 'LMIT', skip: 'Skip to content', main_nav: 'Main navigation', more: 'More', lang_other: 'العربية', open_site: 'Open the website',
   sign_in: 'Sign in', sign_out: 'Sign out', signing_in: 'Signing in', email: 'Email', password: 'Password',
   show_password: 'Show password', hide_password: 'Hide password',
@@ -117,6 +121,10 @@ const en = {
 };
 
 const ar = {
+  login_id: 'اسم المستخدم أو البريد الإلكتروني',
+  open_screen: 'افتح شاشة الكاشير', open_customer_menu: 'افتح قائمة الجوال',
+  extra_settings: 'إعدادات إضافية', optional_details: 'تفاصيل إضافية (اختياري)',
+  arrange_menu: 'ترتيب الأصناف', menu_help: 'غيّر السعر أو أضف صورة أو حدّد الصنف غير المتوفر. تتحدث الشاشتان تلقائيًا.',
   brand: 'لميت', skip: 'انتقل إلى المحتوى', main_nav: 'التنقل الرئيسي', more: 'المزيد', lang_other: 'English', open_site: 'افتح الموقع',
   sign_in: 'تسجيل الدخول', sign_out: 'تسجيل الخروج', signing_in: 'جارٍ الدخول', email: 'البريد الإلكتروني', password: 'كلمة المرور',
   show_password: 'إظهار كلمة المرور', hide_password: 'إخفاء كلمة المرور',

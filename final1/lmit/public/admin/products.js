@@ -22,9 +22,18 @@ const list = {
 
     const addHref = () => `#/products/new${st.cat ? `?cat=${st.cat}` : ''}`;
     const addBtn = h('a', { class: 'btn btn-primary', href: addHref() }, ic('plus'), t('add_item'));
+    const arrange = h('button', { type: 'button', class: 'btn btn-quiet btn-sm', 'aria-pressed': 'false', on: { click: () => {
+      const active = root.classList.toggle('arranging');
+      arrange.setAttribute('aria-pressed', String(active));
+    } } }, ic('grip'), t('arrange_menu'));
     root.append(
-      pageHead(t('nav_menu'), h('a', { class: 'btn', href: '#/categories' }, ic('tag'), t('nav_categories')), addBtn),
+      pageHead(t('nav_menu'), addBtn), h('p', { class: 'hint menu-help' }, t('menu_help')),
+      h('div', { class: 'menu-destinations' },
+        h('a', { class: 'menu-destination', href: lang() === 'ar' ? '/screen' : '/en/screen', target: '_blank', rel: 'noopener' }, ic('site'), t('open_screen')),
+        h('a', { class: 'menu-destination', href: lang() === 'ar' ? '/menu' : '/en/menu', target: '_blank', rel: 'noopener' }, ic('external'), t('open_customer_menu'))),
       h('div', { class: 'filters' }, h('div', { class: 'search-wrap' }, ic('search'), search), catSel.el, availSel.el),
+      h('details', { class: 'menu-extra-tools' }, h('summary', t('extra_settings')),
+        h('a', { class: 'btn btn-quiet btn-sm', href: '#/categories' }, ic('tag'), t('nav_categories')), arrange),
       live, body);
 
     const match = (p) => (!st.cat || String(p.category_id) === st.cat)
@@ -128,8 +137,7 @@ const list = {
         h('div', { class: 'p-price' }, h('button', { type: 'button', class: 'price-btn', 'aria-label': t('edit_price_of', { name: nm, price: moneyUnit(p.price) }), on: { click: () => editPrice(p, li) } }, h('b', money(p.price)), ' ', h('i', t('sar')), ic('edit'))),
         h('div', { class: 'p-flags' },
           toggle({ checked: p.available, label: t('available'), showLabel: true, cls: 'sw-avail', onChange: (v) => { li.classList.toggle('is-off', !v); return patch(p, { available: v }, t(v ? 'marked_available' : 'marked_unavailable', { name: nm })).catch((e) => { li.classList.toggle('is-off', v); throw e; }); } }),
-          chipToggle({ pressed: p.featured, label: t('featured'), iconName: 'star', onChange: (v) => patch(p, { featured: v }, t(v ? 'featured_on' : 'featured_off', { name: nm })) }),
-          chipToggle({ pressed: p.bestseller, label: t('bestseller'), iconName: 'flame', onChange: (v) => patch(p, { bestseller: v }, t(v ? 'best_on' : 'best_off', { name: nm })) })),
+          ),
         h('div', { class: 'p-ops' },
           h('a', { class: 'icon-btn', href: `#/products/${p.id}`, 'data-act': 'edit', 'aria-label': `${t('edit_item')}: ${nm}`, title: t('edit_item') }, ic('edit')),
           h('button', { type: 'button', class: 'icon-btn', 'data-act': 'up', 'aria-label': `${t('move_up')}: ${nm}`, title: t('move_up'), on: { click: () => move(p, -1) } }, ic('up')),

@@ -22,7 +22,7 @@ const NAV = [
   { id: 'website', icon: 'site', key: 'nav_website' },
   { id: 'account', icon: 'user', key: 'nav_account' },
 ];
-const TABS = ['overview', 'products', 'photos', 'website', 'account'];
+const TABS = ['products', 'photos', 'website'];
 
 let user = null;
 let es = null;
@@ -32,16 +32,17 @@ let newOrders = 0;
 let currentHash = location.hash;
 let skipGuard = false;
 let main;
-let route = { name: 'overview', parts: [], query: new URLSearchParams() };
+let route = { name: 'products', parts: [], query: new URLSearchParams() };
 
-const siteHref = () => (lang() === 'ar' ? '/' : '/en');
+const siteHref = () => (lang() === 'ar' ? '/menu' : '/en/menu');
+const screenHref = () => (lang() === 'ar' ? '/screen' : '/en/screen');
 
 // ---------- routing ----------
 function parseHash() {
   const raw = location.hash.replace(/^#\/?/, '');
   const [path, q] = raw.split('?');
   const parts = path.split('/').filter(Boolean);
-  const name = SCREENS[parts[0]] ? parts[0] : 'overview';
+  const name = SCREENS[parts[0]] ? parts[0] : 'products';
   return { name, parts: parts.slice(1), query: new URLSearchParams(q || '') };
 }
 
@@ -165,7 +166,8 @@ function openMore() {
   const d = openDialog({
     title: t('more'), cls: 'dlg-sheet',
     body: h('div', { class: 'more-list' }, links,
-      item('external', t('open_site'), null, siteHref()),
+      item('site', t('open_screen'), null, screenHref()),
+      item('external', t('open_customer_menu'), null, siteHref()),
       item('globe', t('lang_other'), () => { d.close(); switchLang(); }),
       item('logout', t('sign_out'), () => { d.close(); signOut(); })),
   });
@@ -175,10 +177,14 @@ function buildShell() {
   app.className = 'shell';
   main = h('main', { class: 'main', id: 'main', tabindex: '-1' });
   const side = h('aside', { class: 'side' },
-    h('a', { class: 'side-logo', href: '#/overview', 'aria-label': t('brand') }, h('img', { src: '/brand/logo-lockup-cream.png', width: 240, height: 97, alt: t('brand') })),
-    h('nav', { class: 'side-nav', 'aria-label': t('main_nav') }, NAV.map((n) => navLink(n, 'side-link'))),
+    h('a', { class: 'side-logo', href: '#/products', 'aria-label': t('brand') }, h('img', { src: '/brand/logo-lockup-cream.png', width: 240, height: 97, alt: t('brand') })),
+    h('nav', { class: 'side-nav', 'aria-label': t('main_nav') },
+      NAV.filter((n) => TABS.includes(n.id)).map((n) => navLink(n, 'side-link')),
+      h('details', { class: 'admin-advanced' }, h('summary', t('extra_settings')),
+        NAV.filter((n) => ['categories', 'account'].includes(n.id)).map((n) => navLink(n, 'side-link')))),
     h('div', { class: 'side-foot' },
-      h('a', { class: 'side-link', href: siteHref(), target: '_blank', rel: 'noopener' }, ic('external'), h('span', { class: 'nl-text' }, t('open_site'))),
+      h('a', { class: 'side-link', href: screenHref(), target: '_blank', rel: 'noopener' }, ic('site'), h('span', { class: 'nl-text' }, t('open_screen'))),
+      h('a', { class: 'side-link', href: siteHref(), target: '_blank', rel: 'noopener' }, ic('external'), h('span', { class: 'nl-text' }, t('open_customer_menu'))),
       h('button', { type: 'button', class: 'side-link', on: { click: switchLang } }, ic('globe'), h('span', { class: 'nl-text' }, t('lang_other'))),
       h('button', { type: 'button', class: 'side-link', on: { click: signOut } }, ic('logout'), h('span', { class: 'nl-text' }, t('sign_out')))));
   const top = h('header', { class: 'topbar' },

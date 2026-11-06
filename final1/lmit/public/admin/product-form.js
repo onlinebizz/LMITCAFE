@@ -73,10 +73,13 @@ export default {
 
     const form = h('form', { class: 'pform', novalidate: true },
       h('div', { class: 'pf-grid' },
-        h('div', { class: 'pf-main' }, category.el, h('div', { class: 'two' }, nameAr.el, nameEn.el), h('div', { class: 'two' }, descAr.el, descEn.el), price.el),
-        h('div', { class: 'pf-side' }, photo.el, h('div', { class: 'sw-stack' }, sw('available', t('available')), sw('featured', t('featured')), sw('bestseller', t('bestseller'))))),
-      h('section', { class: 'pf-sec' }, h('h2', { class: 'sec-title' }, t('variants')), h('p', { class: 'hint' }, t('variants_hint')), variants.box, variants.addB),
-      h('section', { class: 'pf-sec' }, h('h2', { class: 'sec-title' }, t('extras')), h('p', { class: 'hint' }, t('extras_hint')), extras.box, extras.addB),
+        h('div', { class: 'pf-main' }, category.el, h('div', { class: 'two' }, nameAr.el, nameEn.el), price.el),
+        h('div', { class: 'pf-side' }, photo.el, h('div', { class: 'sw-stack' }, sw('available', t('available'))))),
+      h('details', { class: 'product-advanced' }, h('summary', t('optional_details')),
+        h('div', { class: 'two' }, descAr.el, descEn.el),
+        h('div', { class: 'sw-stack' }, sw('featured', t('featured')), sw('bestseller', t('bestseller'))),
+        h('section', { class: 'pf-sec' }, h('h2', { class: 'sec-title' }, t('variants')), h('p', { class: 'hint' }, t('variants_hint')), variants.box, variants.addB),
+        h('section', { class: 'pf-sec' }, h('h2', { class: 'sec-title' }, t('extras')), h('p', { class: 'hint' }, t('extras_hint')), extras.box, extras.addB)),
       msg,
       h('div', { class: 'savebar' }, saveBtn, h('a', { class: 'btn', href: '#/products' }, t('cancel')), delBtn));
     form.addEventListener('input', touch);
@@ -113,7 +116,7 @@ export default {
         if (!Number.isFinite(d) || d < 0 || d > 1000) bad(`extras.${i}.price`, t('err_amount'));
         body.extras.push({ name_ar: v.name_ar, name_en: v.name_en, price: d });
       });
-      if (first) { first.input.focus(); return; }
+      if (first) { const details = first.input.closest('details'); if (details) details.open = true; first.input.focus(); return; }
       saveBtn.disabled = true;
       try {
         if (p) await api.put(`/api/admin/products/${p.id}`, body); else await api.post('/api/admin/products', body);
@@ -123,7 +126,7 @@ export default {
       } catch (err) {
         saveBtn.disabled = false;
         if (!(err.field && fail(err.field, errorText(err)))) { msg.hidden = false; msg.textContent = errorText(err); }
-        else fields[err.field].input.focus();
+        else { const input = fields[err.field].input; const details = input.closest('details'); if (details) details.open = true; input.focus(); }
       }
     });
 
@@ -132,7 +135,7 @@ export default {
       if (!ok) return;
       try { await api.del(`/api/admin/products/${p.id}`); clearDirty(); toast(t('item_deleted')); ctx.go('#/products'); } catch (err) { toast(errorText(err), 'error'); }
     }
-    (p ? null : nameAr.input).focus?.();
+    (p ? null : nameAr.input)?.focus?.();
     return { title };
   },
 };

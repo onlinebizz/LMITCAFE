@@ -8,7 +8,7 @@ body[data-page="screen"] > #main { margin: 0; padding: 0; max-width: none; }
 .screen-header .status { margin: 0; color: var(--brass-300); font-size: clamp(14px, 1.6vw, 24px); border: 0; background: none; }
 .screen-language { color: var(--cream-200); font-size: 14px; padding: 10px; text-decoration: none; }
 .screen-layout { min-height: 0; display: grid; grid-template-columns: minmax(170px, 21vw) minmax(0, 1fr); }
-.screen-main { grid-column: 2; grid-row: 1; min-height: 0; min-width: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); padding: 20px 2.5vw 24px; }
+.screen-main { grid-column: 2; grid-row: 1; min-height: 0; min-width: 0; width: 100%; max-width: none; margin: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); padding: 20px 2.5vw 24px; }
 .screen-sidebar { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px 2vw; border-inline-end: 1px solid #c9a25740; }
 .screen-kicker { font-size: 14px; color: var(--brass-300); letter-spacing: .1em; margin-bottom: 24px; }
 .screen-sidebar nav { display: grid; gap: 12px; }

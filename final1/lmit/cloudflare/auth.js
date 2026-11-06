@@ -42,15 +42,16 @@ export function basicCredentials(req) {
   if (separator < 1) throw new HttpError(401, 'unauthorized', 'Valid owner credentials are required.');
   const email = decoded.slice(0, separator).trim().toLowerCase();
   const password = decoded.slice(separator + 1);
-  if (email.length > 120 || !/^[^\s@]+@[^\s@]+$/.test(email)) throw new HttpError(400, 'invalid', 'Use an email-shaped login ID.');
+  if (!/^[^\s:\x00-\x1f\x7f]{1,120}$/.test(email)) throw new HttpError(400, 'invalid', 'Use a username or email without spaces.');
   return { email, password };
 }
 export async function bootstrapOwner(req) {
   sameOrigin(req);
-  rateLimit(`setup:${clientIp(req)}`, 5, 15 * 60000);
   if (one('SELECT id FROM users LIMIT 1')) throw new HttpError(409, 'already_setup', 'An owner already exists. Sign in instead.');
   const expected = current().env.ADMIN_SETUP_KEY;
   if (!expected || expected.length < 32 || !same(sha(req.headers['x-setup-key'] || ''), sha(expected))) throw new HttpError(403, 'forbidden', 'Owner setup is not authorized.');
+  // Only an authorized one-time setup can spend KDF work or consume this limit.
+  rateLimit(`setup:${sha(expected)}:${clientIp(req)}`, 5, 15 * 60000);
   const { email, password } = basicCredentials(req);
   const hash = await hashPassword(password);
   tx(() => {

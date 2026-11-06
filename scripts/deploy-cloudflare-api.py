@@ -103,6 +103,9 @@ try:
                                     headers={"X-Setup-Key": setup_key}, timeout=30)
             if response.status_code in (200, 409):
                 break
+            if response.status_code not in (403, 404, 502, 503):
+                error = response.json().get("error", {})
+                raise RuntimeError(f"Owner setup failed: HTTP {response.status_code}; {error.get('code', 'unknown')}. No credentials logged.")
             if time.monotonic() > deadline:
                 raise RuntimeError(f"Owner setup unavailable: HTTP {response.status_code}. No credentials logged.")
             time.sleep(2)

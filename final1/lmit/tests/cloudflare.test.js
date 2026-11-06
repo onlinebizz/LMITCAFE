@@ -53,7 +53,7 @@ test('Counter display paginates every product without losing category boundaries
 
 test('Cloudflare runtime preserves the public site and owner dashboard', { timeout: 180000 }, async (t) => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'lmit-worker-test-'));
-  const email = 'worker-test@example.invalid';
+  const email = 'test-owner';
   const password = crypto.randomBytes(18).toString('hex');
   const changedPassword = crypto.randomBytes(18).toString('hex');
   const setupKey = crypto.randomBytes(32).toString('hex');
