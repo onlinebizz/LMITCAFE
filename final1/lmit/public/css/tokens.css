@@ -1,0 +1,62 @@
+/* LMIT design tokens. Every colour is sampled from the cafe: menu card green, door olive, menu paper cream,
+   brass lettering, counter sage, back wall terracotta, awning teal. */
+:root {
+  --forest-950: #04170f;
+  --forest-900: #082519;
+  --forest-800: #0e3324;
+  --forest-700: #17452f;
+  --forest-600: #235a3f;
+  --olive-600: #5e6a2b;
+  --olive-800: #433e2b;
+  --cream-50: #faf5ea;
+  --cream-100: #f0dfc8;
+  --cream-200: #e4cfae;
+  --cream-300: #cdb48c;
+  --brass-300: #e2c27f;
+  --brass-400: #c9a257;
+  --brass-600: #a9822f;
+  --brass-700: #7d5f1c;
+  --sage-400: #7fa88b;
+  --sage-700: #3f6b4f;
+  --terra-500: #b2552e;
+  --terra-700: #8f3f1e;
+  --teal-500: #4b9d9b;
+  --teal-700: #2b6f6d;
+  --ink-900: #0b1f15;
+  --ink-700: #26382d;
+  --ink-500: #4a5e51;
+  --danger: #a63a2b;
+  --ok: #2f6b45;
+
+  --font-display: 'Bodoni Moda', 'Noto Naskh Arabic', 'Baskerville', 'Times New Roman', serif;
+  --font-ar-display: 'Noto Naskh Arabic', 'Bodoni Moda', 'Traditional Arabic', serif;
+  --font-body: 'Jost', 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  --step--1: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --step-1: clamp(1.1875rem, 1.12rem + 0.3vw, 1.375rem);
+  --step-2: clamp(1.5rem, 1.35rem + 0.7vw, 1.9rem);
+  --step-3: clamp(1.9rem, 1.6rem + 1.4vw, 2.7rem);
+  --step-4: clamp(2.4rem, 1.8rem + 2.8vw, 4rem);
+
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem; --space-5: 1.5rem;
+  --space-6: 2rem; --space-7: 3rem; --space-8: 4.5rem; --space-9: 6.5rem;
+
+  --r-sm: 4px; --r-md: 10px; --r-lg: 18px; --r-pill: 999px;
+  --shadow-soft: 0 10px 30px -12px rgba(4, 23, 15, 0.35);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 160ms; --t-med: 300ms;
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --max: 72rem;
+}
+
+/* Category accent colours, picked in the dashboard */
+[data-accent='brass'] { --accent: var(--brass-400); --accent-ink: var(--brass-700); }
+[data-accent='sage'] { --accent: var(--sage-400); --accent-ink: var(--sage-700); }
+[data-accent='terracotta'] { --accent: var(--terra-500); --accent-ink: var(--terra-700); }
+[data-accent='teal'] { --accent: var(--teal-500); --accent-ink: var(--teal-700); }
+[data-accent='olive'] { --accent: var(--olive-600); --accent-ink: var(--olive-800); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

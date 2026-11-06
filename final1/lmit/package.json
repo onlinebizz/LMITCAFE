@@ -1,0 +1,16 @@
+{
+  "name": "lmit-cafe",
+  "version": "1.0.0",
+  "description": "LMIT cafe website, digital menu and admin dashboard",
+  "main": "index.js",
+  "scripts": {
+    
+    "start": "node --no-warnings server/index.js",
+    "dev": "node --no-warnings --watch server/index.js",
+    "create-admin": "node scripts/create-admin.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
