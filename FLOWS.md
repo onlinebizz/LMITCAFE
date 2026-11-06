@@ -15,6 +15,8 @@
   motion and live updates still work.
 - Preserve the earlier counter composition: brand header, side category
   navigation and product grid. No opening status, website link or paging controls.
+- Use medium, balanced product sizes: three columns on counter/desktop and two
+  on phones, with bounded photo height; don't turn the menu into oversized tiles.
 - Images retain their aspect ratio. Category decoration uses the existing
   forest/cream palette, not multicolored markers. Secondary text isolates bidi.
 - Admin photo and names form one clickable identity; photo, editable names,
