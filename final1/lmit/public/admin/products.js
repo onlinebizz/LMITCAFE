@@ -1,6 +1,6 @@
 import { api } from './api.js';
 import { t, tn, lang, errorText } from './i18n.js';
-import { h, ic, pageHead, toggle, chipToggle, swatch, toast, announce, emptyState, sortable, btn, selectField } from './ui.js';
+import { h, ic, pageHead, toggle, chipToggle, toast, announce, emptyState, sortable, btn, selectField } from './ui.js';
 import { money, moneyUnit, parseNum, pickName, otherName, num } from './format.js';
 import { imgEl } from './media-ui.js';
 import productForm from './product-form.js';
@@ -169,8 +169,8 @@ const list = {
         sortable(ul, { item: '.prow', handle: '.grip', onDrop: (ids) => commitOrder(c.id, ids) });
         const nm = pickName(c);
         return h('section', { class: 'grp', 'data-accent': c.accent, 'aria-labelledby': `g${c.id}` },
-          h('header', { class: 'grp-head' }, swatch(c.accent), h('h2', { class: 'grp-title', id: `g${c.id}`, dir: 'auto' }, nm), c.active ? null : h('span', { class: 'tag-off' }, t('hidden_cat')),
-            h('span', { class: 'led-dots', 'aria-hidden': 'true' }), h('span', { class: 'grp-count' }, tn('n_items', rows.length)),
+          h('header', { class: 'grp-head' }, h('h2', { class: 'grp-title', id: `g${c.id}`, dir: 'auto' }, nm), c.active ? null : h('span', { class: 'tag-off' }, t('hidden_cat')),
+            h('span', { class: 'grp-count' }, tn('n_items', rows.length)),
             h('a', { class: 'btn btn-quiet btn-sm', href: `#/products/new?cat=${c.id}`, 'aria-label': `${t('add_item')}: ${nm}` }, ic('plus'), t('add_item'))),
           ul);
       }));

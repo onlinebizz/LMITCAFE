@@ -1,4 +1,4 @@
-/* LMIT customer site. Window-pane motif from the storefront, dot leaders from the printed menu, brass hairlines from the lettering. */
+/* LMIT customer site. Forest, cream and restrained brass; unframed photography. */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body { margin: 0; background: var(--cream-50); color: var(--ink-900); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; --hdr: 64px; }
@@ -79,12 +79,12 @@ section { padding: var(--space-8) var(--gutter); max-width: var(--max); margin: 
 .price i { font-style: normal; font-size: .8em; opacity: .75; }
 
 .door-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--space-4); }
-.door { position: relative; display: flex; flex-direction: column; gap: .25rem; min-height: 130px; padding: var(--space-5); background: var(--cream-100); border-inline-start: 5px solid var(--accent, var(--brass-400)); text-decoration: none; transition: transform var(--t-med) var(--ease), box-shadow var(--t-med); }
+.door { position: relative; display: flex; flex-direction: column; gap: .25rem; min-height: 130px; padding: var(--space-5); background: var(--cream-100); border: 0; text-decoration: none; transition: transform var(--t-med) var(--ease), box-shadow var(--t-med); }
 .door:hover { transform: translateY(-3px); box-shadow: var(--shadow-soft); }
 .door-name { font-family: var(--font-display); font-size: var(--step-2); color: var(--forest-800); line-height: 1.25; }
 :lang(ar) .door-name { font-family: var(--font-ar-display); font-weight: 700; }
 .door-desc { font-size: var(--step--1); color: var(--ink-700); }
-.door .arrow { position: absolute; inset-inline-end: var(--space-4); bottom: var(--space-4); width: 22px; height: 22px; color: var(--accent-ink, var(--brass-700)); }
+.door .arrow { position: absolute; inset-inline-end: var(--space-4); bottom: var(--space-4); width: 22px; height: 22px; color: var(--forest-800); }
 
 .picks { max-width: none; padding-inline: 0; }
 .picks > .sec-title { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
@@ -279,7 +279,7 @@ body[data-page="menu"] .no-photo > img { width: 44px; height: 56px; object-fit: 
 body[data-page="menu"] .no-photo small { font: 13px var(--font-body); letter-spacing: .25em; color: var(--forest-700); opacity: .6; }
 body[data-page="menu"] .item-text { padding: 13px 0 8px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
 body[data-page="menu"] .item .n1 { font-size: 19px; line-height: 1.45; font-weight: 500; }
-body[data-page="menu"] .item .n2 { font-size: 13px; line-height: 1.4; color: var(--ink-500); }
+body[data-page="menu"] .item .n2 { font-size: 13px; line-height: 1.4; color: var(--ink-500); text-align: inherit; }
 body[data-page="menu"] .item-desc { display: none; }
 body[data-page="menu"] .flags { margin-block-start: 5px; }
 body[data-page="menu"] .item-bottom { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 0 14px; }

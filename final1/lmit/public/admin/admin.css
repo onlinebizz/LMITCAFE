@@ -212,6 +212,7 @@ a.led-row:hover .led-k { color: var(--brass-700); }
 .p-identity .p-thumb img { object-fit: contain; }
 .p-names { gap: 4px; text-align: start; }
 .p-names > * { text-align: inherit; }
+.grp-head > .btn:last-child { margin-inline-start: auto; }
 .prow .p-price { grid-column: 1; }
 .prow .p-flags { grid-column: 2; }
 .prow .p-ops { grid-column: 1 / -1; }

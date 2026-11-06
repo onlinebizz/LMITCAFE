@@ -43,7 +43,7 @@ nav.addEventListener('click', (event) => {
   if (!button) return;
   setPaused(true);
   const group = document.getElementById(`screen-cat-${button.dataset.screenCategory}`);
-  if (group) panel.scrollTo({ top: group.offsetTop - panel.offsetTop, behavior: motion.matches ? 'instant' : 'smooth' });
+  if (group) panel.scrollTo({ top: panel.scrollTop + group.getBoundingClientRect().top - panel.getBoundingClientRect().top, behavior: motion.matches ? 'instant' : 'smooth' });
 });
 for (const type of ['wheel', 'touchstart', 'pointerdown']) panel.addEventListener(type, () => setPaused(true), { passive: true });
 panel.addEventListener('keydown', (event) => {
