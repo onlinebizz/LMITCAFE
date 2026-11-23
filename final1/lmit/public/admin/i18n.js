@@ -2,12 +2,12 @@
 import { STRINGS } from './strings.js';
 
 let current = 'ar';
-try { const s = localStorage.getItem('lmit_admin_lang'); if (s === 'en' || s === 'ar') current = s; } catch { /* storage may be blocked */ }
+try { const s = localStorage.getItem('farfalli_admin_lang'); if (s === 'en' || s === 'ar') current = s; } catch { /* storage may be blocked */ }
 
 export const lang = () => current;
 export function setLang(l) {
   current = l === 'en' ? 'en' : 'ar';
-  try { localStorage.setItem('lmit_admin_lang', current); } catch { /* ignore */ }
+  try { localStorage.setItem('farfalli_admin_lang', current); } catch { /* ignore */ }
   applyLang();
 }
 export function applyLang() {

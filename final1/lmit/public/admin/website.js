@@ -251,7 +251,7 @@ function hours(body, s) {
   const box = h('div', { class: 'hrs' });
   let touch = () => {};
   const copyBtn = btn([ic('copy'), t('hours_copy', { day: names[6] })], '', () => { sync(); const src = days[6]; days.forEach((d) => { if (d.day !== 6) { d.closed = src.closed; d.ranges = src.ranges.map((r) => ({ ...r })); } }); touch(); draw(); toast(t('hours_copied')); });
-  const sync = () => days.forEach((d) => d.ranges.forEach((r, j) => { r.open = box.querySelector(`[data-path="h.${d.day}.${j}.open"]`).value; r.close = box.querySelector(`[data-path="h.${d.day}.${j}.close"]`).value; }));
+  const sync = () => days.filter((d) => !d.closed).forEach((d) => d.ranges.forEach((r, j) => { r.open = box.querySelector(`[data-path="h.${d.day}.${j}.open"]`).value; r.close = box.querySelector(`[data-path="h.${d.day}.${j}.close"]`).value; }));
   function draw() {
     for (const k of Object.keys(reg)) delete reg[k];
     box.replaceChildren(...DAY_ORDER.map((i) => {
@@ -263,16 +263,15 @@ function hours(body, s) {
       });
       return h('div', { class: `hr-row ${d.closed ? 'is-closed' : ''}` },
         h('h3', { class: 'hr-day' }, names[i]),
-        toggle({ checked: d.closed, label: t('hours_closed'), showLabel: true, onChange: (v) => { sync(); d.closed = v; if (!v && !d.ranges.length) d.ranges.push({ open: '06:00', close: '02:00' }); touch(); draw(); } }),
-        d.closed ? null : h('div', { class: 'hr-ranges' }, rr, d.ranges.length < 2 ? btn([ic('plus'), t('hours_add_range')], 'btn-quiet btn-sm', () => { sync(); d.ranges.push({ open: '12:00', close: '18:00' }); touch(); draw(); }, { 'aria-label': `${t('hours_add_range')}: ${names[i]}` }) : null));
+        toggle({ checked: d.closed, label: t('hours_closed'), showLabel: true, onChange: (v) => { sync(); d.closed = v; touch(); draw(); } }),
+        d.closed ? null : h('div', { class: 'hr-ranges' }, rr, d.ranges.length < 2 ? btn([ic('plus'), t(d.ranges.length ? 'hours_add_range' : 'hours_add_first')], 'btn-quiet btn-sm', () => { sync(); d.ranges.push({ open: '', close: '' }); touch(); draw(); }, { 'aria-label': `${t(d.ranges.length ? 'hours_add_range' : 'hours_add_first')}: ${names[i]}` }) : null));
     }));
   }
   draw();
   const sf = settingsForm(reg, [h('section', { class: 'pf-sec' }, h('h2', { class: 'sec-title' }, t('sec_hours')), h('p', { class: 'hint' }, t('hours_hint')), copyBtn, box)], () => {
     sync();
     const out = days.map((d) => {
-      if (!d.closed && !d.ranges.length) throw fail(`h.${d.day}.0.open`, t('err_hours_range'));
-      d.ranges.forEach((r, j) => { if (!r.open) throw fail(`h.${d.day}.${j}.open`, t('err_hours_time')); if (!r.close) throw fail(`h.${d.day}.${j}.close`, t('err_hours_time')); });
+      if (!d.closed) d.ranges.forEach((r, j) => { if (!r.open) throw fail(`h.${d.day}.${j}.open`, t('err_hours_time')); if (!r.close) throw fail(`h.${d.day}.${j}.close`, t('err_hours_time')); });
       return { day: d.day, closed: d.closed, ranges: d.closed ? [] : d.ranges.map((r) => ({ open: r.open, close: r.close })) };
     });
     return { hours: out };

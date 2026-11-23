@@ -1,6 +1,7 @@
 // Shared by the server (first paint) and the browser (live updates). Pure functions, no DOM access.
 
 export const TZ = 'Asia/Riyadh';
+export const FULL_MENU = 'https://qr.finedinemenu.com/farfyly/menu/64cfe4e978ffb800146315d2';
 
 export const S = {
   ar: {
@@ -9,10 +10,13 @@ export const S = {
     lang_switch: 'English', lang_switch_label: 'View this page in English',
     open_now: 'مفتوح الآن', closed_now: 'مغلق الآن', until: 'حتى {t}', opens_at: 'يفتح {t}', opens_day: 'يفتح {d} {t}', today: 'اليوم',
     hero_cta: 'تصفح القائمة', hero_map: 'افتح الخريطة',
-    picks: 'المختارات', bestseller: 'الأكثر طلباً', menu_title: 'القائمة', wall_title: 'على جدار لميت',
+    picks: 'من المطبخ والكافيه', bestseller: 'الأكثر طلباً', menu_title: 'مختارات من القائمة', wall_title: 'أجواء فارفيلي',
+    hours_unconfirmed: 'اتصل للتأكد من أوقات العمل.', guide: 'دليل مستقل لمطعم وكافيه فارفيلي',
+    hero_kicker: 'مطعم وكافيه إيطالي · أبها', price_unlisted: 'السعر غير منشور',
+    menu_note: 'للأسعار والتوفّر، راجع قائمة المطعم أو اتصل قبل الزيارة.', official_menu: 'قائمة المطعم الكاملة',
     visit_title: 'زيارتنا', hours_title: 'أوقات العمل', address_title: 'العنوان', open_maps: 'افتح في خرائط جوجل', call: 'اتصل بنا',
     follow: 'تابعنا', to: 'إلى', sold_out: 'غير متوفر', all_menu: 'القائمة كاملة',
-    search_label: 'ابحث في القائمة', search_ph: 'ابحث عن مشروب أو حلى', no_results: 'لم نجد شيئاً بهذا الاسم. جرّب كلمة أخرى.',
+    search_label: 'ابحث في القائمة', search_ph: 'ابحث عن طبق أو مشروب', no_results: 'لم نجد شيئاً بهذا الاسم. جرّب كلمة أخرى.',
     categories: 'أقسام القائمة', add: 'أضف', add_aria: 'أضف {n} إلى الطلب', details: 'تفاصيل {n}',
     options: 'الخيارات', extras: 'الإضافات', add_to_order: 'أضف إلى الطلب', close: 'إغلاق',
     qty: 'الكمية', qty_up: 'زيادة الكمية', qty_down: 'تقليل الكمية', remove: 'حذف',
@@ -34,10 +38,13 @@ export const S = {
     lang_switch: 'العربية', lang_switch_label: 'عرض الصفحة بالعربية',
     open_now: 'Open now', closed_now: 'Closed now', until: 'until {t}', opens_at: 'opens {t}', opens_day: 'opens {d} {t}', today: 'Today',
     hero_cta: 'Browse the menu', hero_map: 'Open the map',
-    picks: 'Picks', bestseller: 'Bestseller', menu_title: 'The menu', wall_title: 'On our wall',
+    picks: 'From the kitchen & café', bestseller: 'Bestseller', menu_title: 'Menu highlights', wall_title: 'Inside Farfalli',
+    hours_unconfirmed: 'Call to confirm opening hours.', guide: 'Independent guide to Farfalli',
+    hero_kicker: 'Italian restaurant & café · Abha', price_unlisted: 'Price not listed',
+    menu_note: 'For prices and availability, check the restaurant’s menu or call ahead.', official_menu: 'Full restaurant menu',
     visit_title: 'Visit us', hours_title: 'Opening hours', address_title: 'Address', open_maps: 'Open in Google Maps', call: 'Call us',
     follow: 'Follow us', to: 'to', sold_out: 'Sold out', all_menu: 'Full menu',
-    search_label: 'Search the menu', search_ph: 'Search for a drink or dessert', no_results: 'Nothing matches that search. Try another word.',
+    search_label: 'Search the menu', search_ph: 'Search for a dish or drink', no_results: 'Nothing matches that search. Try another word.',
     categories: 'Menu sections', add: 'Add', add_aria: 'Add {n} to your order', details: 'Details for {n}',
     options: 'Options', extras: 'Extras', add_to_order: 'Add to order', close: 'Close',
     qty: 'Quantity', qty_up: 'Increase quantity', qty_down: 'Decrease quantity', remove: 'Remove',
@@ -76,6 +83,9 @@ const sec = (n) => (n.s ? `<span class="n2" lang="${n.sl}" dir="${dir(n.sl)}">${
 
 export const fmt = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(2));
 export const priceHtml = (n, lang) => `<span class="price" dir="ltr"><i class="riyal" aria-label="${lang === 'ar' ? 'ريال سعودي' : 'Saudi riyals'}">${esc(t(lang, 'sar'))}</i> <b>${fmt(n)}</b></span>`;
+export const menuPrice = (n, lang) => n > 0 ? priceHtml(n, lang) : `<span class="price-unlisted">${esc(t(lang, 'price_unlisted'))}</span>`;
+export const wordmark = '<span class="wordmark" lang="en" dir="ltr">Farfalli<span>.</span></span>';
+export const fullMenuLink = (lang) => `<a class="full-menu-link" href="${FULL_MENU}" target="_blank" rel="noopener noreferrer">${esc(t(lang, 'official_menu'))}</a>`;
 
 // ---------- images ----------
 const mediaUrl = (img, w) => (img.widths && img.widths.length ? `/media/${img.key}-${w}.webp` : `/media/${img.key}-orig.${img.ext}`);
@@ -192,10 +202,10 @@ export function renderHeader(site, lang, page, suffix) {
   const home = homePath(lang);
   const nm = lang === 'ar' ? b.name_ar || b.name_en : b.name_en || b.name_ar;
   const links = page === 'home'
-    ? `<a href="#wall">${esc(t(lang, 'nav_wall'))}</a><a href="#visit">${esc(t(lang, 'nav_visit'))}</a>`
+    ? `<a href="${menuPath(lang)}">${esc(t(lang, 'nav_menu'))}</a><a href="#visit">${esc(t(lang, 'nav_visit'))}</a>`
     : `<a href="${home}">${esc(t(lang, 'nav_home'))}</a><a href="${home === '/' ? '' : home}/#visit">${esc(t(lang, 'nav_visit'))}</a>`.replace('//#', '/#');
   return `<div class="bar">
-    <a class="brand" href="${home}" aria-label="${esc(nm)}"><img src="/brand/logo-lockup-cream.png" width="240" height="97" alt="${esc(nm)}"></a>
+    <a class="brand" href="${home}" aria-label="${esc(nm)}">${wordmark}<small>${esc(lang === 'ar' ? 'مطعم وكافيه إيطالي' : 'ITALIAN KITCHEN & CAFÉ')}</small></a>
     <nav class="links" aria-label="${esc(t(lang, 'nav_menu'))}">${links}</nav>
     <div class="bar-end">${langSwitch(lang, suffix)}<a class="btn btn-brass btn-sm" href="${menuPath(lang)}"${page === 'menu' ? ' aria-current="page"' : ''}>${esc(t(lang, 'nav_menu'))}</a></div>
   </div>`;
@@ -211,23 +221,26 @@ export function renderFooter(site, lang) {
   const home = homePath(lang);
   const tag = b.tagline_en || '';
   return `<div class="foot-in">
-    <img class="foot-logo" src="/brand/logo-lockup-cream.png" width="300" height="121" alt="${esc(lang === 'ar' ? b.name_ar : b.name_en)}" loading="lazy">
+    <a class="brand foot-logo" href="${home}" aria-label="${esc(lang === 'ar' ? b.name_ar : b.name_en)}">${wordmark}</a>
     <div class="foot-cols">
       <nav aria-label="${esc(t(lang, 'nav_menu'))}" class="foot-links"><a href="${menuPath(lang)}">${esc(t(lang, 'nav_menu'))}</a><a href="${home === '/' ? '' : home}/#visit">${esc(t(lang, 'nav_visit'))}</a></nav>
       <div class="foot-social">${socialLinks(site)}</div>
     </div>
-    <p class="foot-note"><span lang="en" dir="ltr">${esc(tag)}</span><span>&copy; ${new Date().getFullYear()} ${esc(lang === 'ar' ? b.name_ar : b.name_en)}. ${esc(t(lang, 'rights'))}.</span></p>
+    <p class="foot-note"><span lang="en" dir="ltr">${esc(tag)}</span><span>${esc(t(lang, 'guide'))}</span></p>
   </div>`;
 }
 
 // ---------- home ----------
 export function renderStatusChip(site, lang, now = new Date()) {
+  if (!hoursKnown(site)) return '';
   const st = openStatus(site.hours, now);
   const tx = statusText(st, lang, riyadhNow(now).day);
   return `<p class="status ${st.open ? 'is-open' : 'is-closed'}" data-status><span class="dot" aria-hidden="true"></span><b>${esc(tx.label)}</b>${tx.detail ? `<span>${esc(tx.detail)}</span>` : ''}</p>`;
 }
 
+const hoursKnown = (site) => site.hours?.length === 7 && site.hours.every((d) => d.closed || d.ranges?.length);
 export function renderHours(site, lang, now = new Date()) {
+  if (!hoursKnown(site)) return `<p>${esc(t(lang, 'hours_unconfirmed'))}</p>`;
   const todayIdx = riyadhNow(now).day;
   const rows = groupHours(site.hours).map((g) => {
     const first = t(lang, 'days')[g.days[0]];
@@ -243,23 +256,29 @@ export function renderHome(site, cats, lang, now = new Date()) {
   const b = site.business || {};
   const h = site.hero || {};
   const title = lang === 'ar' ? h.title_ar : h.title_en;
+  const locationLine = lang === 'ar' ? 'في أبها.' : 'in Abha.';
+  const titleMarkup = title?.endsWith(` ${locationLine}`)
+    ? `${esc(title.slice(0, -locationLine.length).trimEnd())} <span class="hero-location">${esc(locationLine)}</span>` : esc(title);
   const sub = lang === 'ar' ? h.sub_ar : h.sub_en;
-  const subLang = lang === 'ar' ? 'en' : 'ar';
   const heroImg = (h.image) || (site.gallery && site.gallery[0]) || null;
-  const mapBtn = b.maps_url ? `<a class="btn btn-ghost" href="${esc(b.maps_url)}" target="_blank" rel="noopener">${ICON.pin}<span>${esc(t(lang, 'hero_map'))}</span></a>` : '';
+  const mapBtn = `<a class="btn btn-ghost" href="#visit">${ICON.pin}<span>${esc(t(lang, 'visit_title'))}</span></a>`;
 
   const hero = `<section class="hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      ${renderStatusChip(site, lang, now)}
-      <h1 id="hero-title" class="hero-title">${esc(title)}</h1>
-      ${sub ? `<p class="hero-sub" lang="${subLang}" dir="${dir(subLang)}">${esc(sub)}</p>` : ''}
+      <p class="hero-kicker">${esc(t(lang, 'hero_kicker'))}</p>
+      <h1 id="hero-title" class="hero-title">${titleMarkup}</h1>
+      ${sub ? `<p class="hero-sub">${esc(sub)}</p>` : ''}
       <div class="hero-cta"><a class="btn btn-brass" href="${menuPath(lang)}"><span>${esc(t(lang, 'hero_cta'))}</span>${ICON.arrow}</a>${mapBtn}</div>
     </div>
-    ${heroImg ? `<div class="hero-pane"><div class="pane">${imgHtml(heroImg, { lang, sizes: '(min-width: 900px) 440px, 80vw', eager: true })}</div></div>` : ''}
+    ${heroImg ? `<figure class="hero-pane"><div class="pane">${imgHtml(heroImg, { lang, sizes: '(min-width: 900px) min(52vw, 720px), 92vw', eager: true })}</div></figure>` : ''}
   </section>`;
 
-  // The home page no longer shows the category "doors" section; the header and
-  // footer menu button already lead to the full menu page.
+  const featured = cats.flatMap((c) => (c.products || []).filter((p) => p.featured && p.available && p.image).map((p) => ({ p, c }))).slice(0, 3);
+  const highlights = featured.length ? `<section class="highlights" aria-labelledby="highlights-t"><h2 class="sec-title" id="highlights-t">${esc(t(lang, 'picks'))}</h2>
+    <div class="highlight-grid">${featured.map(({ p, c }) => `<a class="highlight" href="${menuPath(lang)}#cat-${esc(c.slug)}">
+      ${imgHtml(p.image, { lang, sizes: '(min-width: 800px) 32vw, 92vw', decorative: true })}
+      <div><small>${esc(names(c, lang).p)}</small><h3>${esc(names(p, lang).p)}</h3></div></a>`).join('')}</div>
+    <div class="highlight-actions"><a class="btn btn-line" href="${menuPath(lang)}">${esc(t(lang, 'hero_cta'))}</a>${fullMenuLink(lang)}</div></section>` : '';
   const promos = (site.promotions || []).length ? `<section class="promos" aria-label="${esc(t(lang, 'picks'))}">${site.promotions.map((p) => {
     const ttl = lang === 'ar' ? p.title_ar || p.title_en : p.title_en || p.title_ar;
     const txt = lang === 'ar' ? p.text_ar || p.text_en : p.text_en || p.text_ar;
@@ -285,7 +304,7 @@ export function renderHome(site, cats, lang, now = new Date()) {
   const phoneDigits = (b.phone || '').replace(/[^\d+]/g, '');
   const visit = `<section class="visit" id="visit" aria-labelledby="visit-t"><h2 id="visit-t" class="sec-title">${esc(t(lang, 'visit_title'))}</h2>
     <div class="visit-grid">
-      <div class="visit-card"><h3>${esc(t(lang, 'hours_title'))}</h3>${renderHours(site, lang, now)}</div>
+      <div class="visit-card"><h3>${esc(t(lang, 'hours_title'))}</h3>${renderStatusChip(site, lang, now)}${renderHours(site, lang, now)}</div>
       <div class="visit-card"><h3>${esc(t(lang, 'address_title'))}</h3>
         ${addr ? `<p class="addr">${esc(addr)}</p>` : ''}
         <div class="visit-actions">
@@ -295,7 +314,7 @@ export function renderHome(site, cats, lang, now = new Date()) {
         ${Object.values(site.social || {}).some(Boolean) ? `<p class="follow">${esc(t(lang, 'follow'))}</p><div class="chips">${socialLinks(site)}</div>` : ''}
       </div></div></section>`;
 
-  return `${hero}${promos}${wall}${gallery}${visit}`;
+  return `${hero}${highlights}${promos}${wall}${gallery}${visit}`;
 }
 
 // ---------- menu page ----------
@@ -306,13 +325,13 @@ export function renderRail(cats, lang) {
 function itemRow(p, lang) {
   const n = names(p, lang);
   const d = lang === 'ar' ? p.desc_ar || p.desc_en : p.desc_en || p.desc_ar;
-  const thumb = p.image ? `<span class="menu-photo">${imgHtml(p.image, { lang, sizes: '(min-width:1100px) 340px, (min-width:700px) 30vw, 50vw' })}</span>` : `<span class="menu-photo no-photo" aria-label="${lang === 'ar' ? 'لم تضف صورة لهذا الصنف' : 'Product photo not added yet'}"><img src="/brand/logo-mark-forest.png" alt="" width="80" height="80"><small>LMIT</small></span>`;
+  const thumb = p.image ? `<span class="menu-photo">${imgHtml(p.image, { lang, sizes: '(min-width:1100px) 340px, (min-width:700px) 30vw, 50vw' })}</span>` : `<span class="menu-photo no-photo"><img src="/brand/farfalli.svg" alt="" width="44" height="44"></span>`;
   const flags = `${p.bestseller ? `<span class="tag tag-best">${esc(t(lang, 'bestseller'))}</span>` : ''}${!p.available ? `<span class="tag tag-out">${esc(t(lang, 'sold_out'))}</span>` : ''}`;
   const text = `${n.p} ${n.s}`.toLowerCase();
   return `<li class="item${p.available ? '' : ' is-out'}" id="p-${p.id}" data-pid="${p.id}" data-text="${esc(text)}">
     <button type="button" class="item-open" data-open="${p.id}" aria-haspopup="dialog" aria-label="${esc(t(lang, 'details', { n: n.p }))}">
       ${thumb}<span class="item-text"><span class="n1">${esc(n.p)}</span>${sec(n)}${d ? `<span class="item-desc">${esc(d)}</span>` : ''}${flags ? `<span class="flags">${flags}</span>` : ''}</span>
-      <span class="item-bottom">${priceHtml(p.price, lang)}<span class="item-detail-hint">${lang === 'ar' ? 'التفاصيل' : 'Details'} ${ICON.arrow}</span></span>
+      <span class="item-bottom">${menuPrice(p.price, lang)}<span class="item-detail-hint">${lang === 'ar' ? 'التفاصيل' : 'Details'} ${ICON.arrow}</span></span>
     </button>
   </li>`;
 }
@@ -335,10 +354,10 @@ export function jsonLd(site, lang, url) {
   const spec = [];
   for (const d of site.hours || []) if (!d.closed) for (const r of d.ranges) spec.push({ '@type': 'OpeningHoursSpecification', dayOfWeek: dayName[d.day], opens: r.open, closes: r.close });
   const data = {
-    '@context': 'https://schema.org', '@type': 'CafeOrCoffeeShop', name: b.name_en || b.name_ar, alternateName: b.name_ar,
-    url, image: url ? `${new URL(url).origin}/brand/og-image.png` : undefined,
-    address: { '@type': 'PostalAddress', streetAddress: b.address_en, addressLocality: 'Al Namas', addressCountry: 'SA' },
-    telephone: b.phone || undefined, hasMap: b.maps_url || undefined, openingHoursSpecification: spec,
+    '@context': 'https://schema.org', '@type': 'Restaurant', name: b.name_en || b.name_ar, alternateName: b.name_ar,
+    url, image: url ? `${new URL(url).origin}/brand/farfalli-social.webp` : undefined,
+    address: { '@type': 'PostalAddress', streetAddress: b.address_en, addressLocality: 'Abha', addressCountry: 'SA' },
+    telephone: b.phone || undefined, hasMap: b.maps_url || undefined, hasMenu: FULL_MENU, openingHoursSpecification: hoursKnown(site) ? spec : undefined,
     sameAs: Object.values(site.social || {}).filter(Boolean),
   };
   return JSON.stringify(data).replace(/</g, '\\u003c');

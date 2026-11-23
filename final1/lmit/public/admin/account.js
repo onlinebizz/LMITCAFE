@@ -34,7 +34,7 @@ export default {
       const b = e.currentTarget; b.disabled = true;
       try {
         const blob = await api.blob('/api/admin/export');
-        const a = h('a', { href: URL.createObjectURL(blob), download: `lmit-backup-${new Date().toISOString().slice(0, 10)}.json` });
+        const a = h('a', { href: URL.createObjectURL(blob), download: `farfalli-backup-${new Date().toISOString().slice(0, 10)}.json` });
         document.body.append(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(a.href), 4000);
         toast(t('backup_saved'));

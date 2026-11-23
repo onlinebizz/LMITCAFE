@@ -1,4 +1,4 @@
-// LMIT owner dashboard: shell, hash router, session, live updates.
+// Farfalli owner dashboard: shell, hash router, session, live updates.
 import { api, setCsrf, onUnauthorized } from './api.js';
 import { t, tn, lang, setLang, applyLang, errorText } from './i18n.js';
 import { h, ic, confirmDialog, isDirty, clearDirty, openDialog, errorBlock, skeleton } from './ui.js';
@@ -177,7 +177,7 @@ function buildShell() {
   app.className = 'shell';
   main = h('main', { class: 'main', id: 'main', tabindex: '-1' });
   const side = h('aside', { class: 'side' },
-    h('a', { class: 'side-logo', href: '#/products', 'aria-label': t('brand') }, h('img', { src: '/brand/logo-lockup-cream.png', width: 240, height: 97, alt: t('brand') })),
+    h('a', { class: 'side-logo', href: '#/products', 'aria-label': t('brand') }, h('span', { class: 'wordmark', lang: 'en', dir: 'ltr' }, 'Farfalli', h('span', '.'))),
     h('nav', { class: 'side-nav', 'aria-label': t('main_nav') },
       NAV.filter((n) => TABS.includes(n.id)).map((n) => navLink(n, 'side-link')),
       h('details', { class: 'admin-advanced' }, h('summary', t('extra_settings')),
@@ -188,7 +188,7 @@ function buildShell() {
       h('button', { type: 'button', class: 'side-link', on: { click: switchLang } }, ic('globe'), h('span', { class: 'nl-text' }, t('lang_other'))),
       h('button', { type: 'button', class: 'side-link', on: { click: signOut } }, ic('logout'), h('span', { class: 'nl-text' }, t('sign_out')))));
   const top = h('header', { class: 'topbar' },
-    h('img', { src: '/brand/logo-mark-cream.png', alt: '', width: 32, height: 32, class: 'topbar-mark' }),
+    h('img', { src: '/brand/farfalli.svg', alt: '', width: 32, height: 32, class: 'topbar-mark' }),
     h('span', { class: 'topbar-name' }, t('brand')),
     h('button', { type: 'button', class: 'topbar-lang', on: { click: switchLang } }, ic('globe'), t('lang_other')));
   const tabs = h('nav', { class: 'tabs', 'aria-label': t('main_nav') },

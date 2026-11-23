@@ -3,7 +3,7 @@ import { one, run, all, tx } from './db.js';
 import { current } from './context.js';
 import { HttpError, parseCookies, clientIp, isSecure } from '../.cloudflare/server/http.js';
 
-const COOKIE = 'lmit_sid';
+const COOKIE = 'farfalli_sid';
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const ITERATIONS = 100000;
 const same = (a, b) => {
@@ -48,7 +48,7 @@ export function basicCredentials(req) {
 export async function bootstrapOwner(req) {
   sameOrigin(req);
   if (one('SELECT id FROM users LIMIT 1')) throw new HttpError(409, 'already_setup', 'An owner already exists. Sign in instead.');
-  const expected = current().env.ADMIN_SETUP_KEY;
+  const expected = current().env.FARFALLI_SETUP_KEY;
   if (!expected || expected.length < 32 || !same(sha(req.headers['x-setup-key'] || ''), sha(expected))) throw new HttpError(403, 'forbidden', 'Owner setup is not authorized.');
   // Only an authorized one-time setup can spend KDF work or consume this limit.
   rateLimit(`setup:${sha(expected)}:${clientIp(req)}`, 5, 15 * 60000);
@@ -115,16 +115,7 @@ export async function login(req, res, email, password) {
   const normalized = email.trim().toLowerCase();
   rateLimit(`login-ip:${clientIp(req)}`, 20, 15 * 60000);
   rateLimit(`login-user:${normalized}`, 6, 15 * 60000);
-  if (!one('SELECT id FROM users LIMIT 1')) {
-    const { ADMIN_EMAIL, ADMIN_PASSWORD } = current().env;
-    if (!ADMIN_EMAIL || !ADMIN_PASSWORD) throw new HttpError(503, 'admin_setup_required', 'Configure ADMIN_EMAIL and ADMIN_PASSWORD as Cloudflare secrets first.');
-    if (same(normalized, ADMIN_EMAIL.trim().toLowerCase()) && same(sha(password), sha(ADMIN_PASSWORD))) {
-      const hash = await hashPassword(password);
-      tx(() => {
-        if (!one('SELECT id FROM users LIMIT 1')) run('INSERT INTO users(email,pass) VALUES(?,?)', normalized, hash);
-      });
-    }
-  }
+  if (!one('SELECT id FROM users LIMIT 1')) throw new HttpError(503, 'admin_setup_required', 'The Farfalli owner must be provisioned before sign-in.');
   const user = one('SELECT id,email,pass FROM users WHERE email=?', normalized);
   // Spend the same KDF work on unknown accounts as on known accounts.
   const dummy = `pbkdf2$${Buffer.alloc(16).toString('base64')}$${Buffer.alloc(32).toString('base64')}`;

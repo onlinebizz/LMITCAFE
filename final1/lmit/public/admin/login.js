@@ -55,7 +55,7 @@ export function showLogin(app, { message = '', done }) {
   const langBtn = h('button', { type: 'button', class: 'btn btn-quiet login-lang', on: { click: () => { setLang(lang() === 'ar' ? 'en' : 'ar'); showLogin(app, { message: '', done }); } } }, ic('globe'), t('lang_other'));
   app.className = 'login';
   app.replaceChildren(
-    h('div', { class: 'login-art' }, h('img', { src: '/brand/logo-lockup-cream.png', width: 240, height: 97, alt: t('brand') }), h('p', { class: 'login-art-line' }, t('login_art'))),
+    h('div', { class: 'login-art' }, h('span', { class: 'wordmark', lang: 'en', dir: 'ltr' }, 'Farfalli', h('span', '.')), h('p', { class: 'login-art-line' }, t('login_art'))),
     h('main', { class: 'login-main' }, langBtn, form));
   email.input.focus();
   document.title = `${t('sign_in')} | ${t('brand')}`;

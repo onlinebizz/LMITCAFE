@@ -1,4 +1,4 @@
-import { esc, names, imgHtml, priceHtml } from './view.js';
+import { esc, names, imgHtml, menuPrice } from './view.js';
 
 export function counterDetailMarkup(product, lang) {
   const n = names(product, lang);
@@ -10,7 +10,7 @@ export function counterDetailMarkup(product, lang) {
       <div class="counter-detail-copy">
         <h2 id="counter-detail-title">${esc(n.p)}</h2>
         ${n.s ? `<p class="counter-detail-secondary" lang="${n.sl}" dir="${n.sl === 'ar' ? 'rtl' : 'ltr'}">${esc(n.s)}</p>` : ''}
-        ${priceHtml(product.price, lang)}
+        ${menuPrice(product.price, lang)}
         <p class="counter-detail-description${description ? '' : ' is-missing'}" lang="${description ? descriptionLang : lang}" dir="${(description ? descriptionLang : lang) === 'ar' ? 'rtl' : 'ltr'}">${esc(description || (lang === 'ar' ? 'لم يُضف وصف لهذا الصنف بعد.' : 'A description has not been added for this product yet.'))}</p>
         ${!product.available ? `<p class="counter-detail-unavailable">${lang === 'ar' ? 'غير متوفر حاليًا' : 'Currently unavailable'}</p>` : ''}
       </div>

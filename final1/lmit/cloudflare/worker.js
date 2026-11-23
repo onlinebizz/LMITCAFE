@@ -151,6 +151,7 @@ export default {
       headers.set('Cache-Control', 'no-store');
       return new Response(response.body, { status: response.status, headers });
     }
-    return env.CAFE.getByName('lmit-primary').fetch(request);
+    // Separate brand workspace. The original LMIT object remains intact for rollback.
+    return env.CAFE.getByName('farfalli-primary').fetch(request);
   },
 };

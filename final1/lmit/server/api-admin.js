@@ -96,7 +96,7 @@ export function register(add) {
       exported_at: new Date().toISOString(),
       categories: listCategories(), products: listProducts(), promotions: listPromotions(), settings: allSettings(),
     };
-    res.setHeader('Content-Disposition', 'attachment; filename="lmit-backup.json"');
+    res.setHeader('Content-Disposition', 'attachment; filename="farfalli-backup.json"');
     return data;
   }));
 

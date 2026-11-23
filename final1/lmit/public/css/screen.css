@@ -53,10 +53,10 @@ html.using-pointer .screen-language:focus-visible,
 html.using-pointer .counter-detail-footer button:focus-visible { outline: none; }
 .screen-empty { padding: 40px 0; font-size: 25px; }
 .counter-detail { width: min(1120px, calc(100vw - 40px)); max-width: none; max-height: calc(100svh - 32px); margin: auto; padding: 0; border: 0; border-radius: 16px; background: var(--cream-50); color: var(--forest-950); overflow: auto; box-shadow: 0 24px 80px rgba(0,0,0,.35); scrollbar-color: var(--brass-600) var(--cream-100); }
-.counter-detail::backdrop { background: rgba(1,16,10,.86); }
+.counter-detail::backdrop { background: rgba(32,23,19,.86); }
 .counter-detail-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr); gap: 32px; padding: 28px; }
 .counter-detail-photo { display: grid; place-items: center; min-width: 0; padding: 16px; border-radius: 12px; background: var(--cream-100); }
-.counter-detail-image { display: block; width: 100%; height: min(60svh, 620px); object-fit: contain; }
+.counter-detail-image { display: block; width: auto; max-width: 100%; height: auto; max-height: min(60svh, 620px); object-fit: contain; border-radius: 12px; }
 .counter-detail-copy { align-self: center; min-width: 0; }
 .counter-detail-copy h2 { margin: 0; color: var(--forest-950); font: 500 clamp(25px, 3vw, 42px)/1.4 var(--font-body); overflow-wrap: anywhere; }
 .counter-detail-secondary { margin-top: 8px; font-size: 18px; color: var(--forest-700); text-align: match-parent; }

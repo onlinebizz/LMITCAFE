@@ -24,7 +24,7 @@ function layout(req, res, o) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
-<meta name="theme-color" content="#082519">
+<meta name="theme-color" content="#f8f3e8">
 <link rel="canonical" href="${esc(canon)}">
 <link rel="alternate" hreflang="ar" href="${esc(origin + pathFor('ar'))}">
 <link rel="alternate" hreflang="en" href="${esc(origin + pathFor('en'))}">
@@ -35,11 +35,9 @@ function layout(req, res, o) {
 <meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${esc(canon)}">
 <meta property="og:locale" content="${lang === 'ar' ? 'ar_SA' : 'en_US'}">
-<meta property="og:image" content="${esc(origin)}/brand/og-image.png">
+<meta property="og:image" content="${esc(origin)}/brand/farfalli-social.webp">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/favicon.ico" sizes="48x48">
-<link rel="icon" type="image/png" href="/brand/icon-32.png" sizes="32x32">
-<link rel="apple-touch-icon" href="/brand/icon-180.png">
+<link rel="icon" href="/brand/farfalli.svg" type="image/svg+xml">
 ${preload.map((f) => `<link rel="preload" href="/fonts/${f}.woff" as="font" type="font/woff" crossorigin>`).join('\n')}
 <link rel="stylesheet" href="/css/fonts.css">
 <link rel="stylesheet" href="/css/tokens.css">
@@ -89,6 +87,7 @@ function menuPage(lang) {
     const cats = publicMenu();
     const main = `<section class="menu-top">
   <h1 class="menu-title">${esc(t(lang, 'menu_title'))}</h1>
+  <p class="menu-note">${esc(t(lang, 'menu_note'))} ${V.fullMenuLink(lang)}</p>
   <label class="search"><span class="sr">${esc(t(lang, 'search_label'))}</span>${V.ICON.search}<input type="search" id="q" placeholder="${esc(t(lang, 'search_ph'))}" autocomplete="off" enterkeyhint="search"><button type="button" id="q-clear" hidden aria-label="${lang === 'ar' ? 'مسح البحث' : 'Clear search'}">${V.ICON.close}</button></label>
   <p class="sr" id="result-count" role="status" aria-live="polite"></p>
 </section>

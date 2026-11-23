@@ -111,7 +111,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
   async function start() {
     child = spawn(process.execPath, [
       'node_modules/wrangler/bin/wrangler.js', 'dev', '--local', '--ip', '127.0.0.1', '--port', String(port),
-      '--persist-to', dir, '--var', `ADMIN_EMAIL:${email}`, '--var', `ADMIN_PASSWORD:${password}`, '--var', `ADMIN_SETUP_KEY:${setupKey}`,
+      '--persist-to', dir, '--var', `FARFALLI_SETUP_KEY:${setupKey}`,
     ], { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, WRANGLER_SEND_METRICS: 'false' } });
     child.stdout.on('data', (data) => { logs += data; });
     child.stderr.on('data', (data) => { logs += data; });
@@ -146,7 +146,7 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
     assert.equal(response.status, 200);
     cookie = response.headers.get('set-cookie').split(';')[0];
     csrf = response.data.csrf;
-    assert.match(response.headers.get('set-cookie'), /HttpOnly; SameSite=Strict/);
+    assert.match(response.headers.get('set-cookie'), /^farfalli_sid=.*HttpOnly; SameSite=Strict/);
     return response;
   };
   try {
@@ -168,8 +168,28 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
       assert.equal((await fetch(base + '/', { method: 'HEAD' })).status, 200);
       assert.equal((await fetch(base + '/api/menu', { method: 'PATCH' })).status, 405);
       const { data } = await request('/api/menu');
-      assert.equal(data.categories.length, 5);
-      assert.equal(data.categories.flatMap((c) => c.products).length, 41);
+      assert.equal(data.categories.length, 4);
+      const products = data.categories.flatMap((c) => c.products);
+      assert.equal(products.length, 10);
+      assert.equal(products[0].name_en, 'Neapolitan Margherita');
+      assert.ok(products.every((p) => p.price === 0));
+      assert.equal(products.filter((p) => p.image).length, 7);
+      for (const { image } of products.filter((p) => p.image)) {
+        assert.deepEqual([image.w, image.h], [2048, 1365]);
+        for (const size of ['orig', '780', '2048']) {
+          const photo = await fetch(`${base}/media/${image.key}-${size}.webp`);
+          assert.equal(photo.status, 200);
+          assert.match(photo.headers.get('content-type'), /image\/webp/);
+        }
+      }
+      const en = await (await fetch(base + '/en')).text();
+      assert.match(en, /Call to confirm opening hours/);
+      assert.match(en, /tel:\+966539039390/);
+      assert.match(en, /g\.page\/Farfalli/);
+      assert.match(en, /qr\.finedinemenu\.com/);
+      assert.doesNotMatch(en, /(?:Al Namas|logo-lockup-cream|Open now|Closed now)/);
+      assert.match(await (await fetch(base + '/admin')).text(), /Farfalli Admin/);
+      assert.match(await (await fetch(base + '/en/menu')).text(), /Price not listed/);
     });
     await t.test('Owner setup requires its secret and becomes permanently unavailable after account creation', async () => {
       const authorization = `Basic ${Buffer.from(`${email}:${password}`).toString('base64')}`;
@@ -295,13 +315,13 @@ test('Cloudflare runtime preserves the public site and owner dashboard', { timeo
     await t.test('Content export and overview work without exposing authentication secrets', async () => {
       const backup = await request('/api/admin/export');
       assert.equal(backup.status, 200);
-      assert.match(backup.headers.get('content-disposition'), /lmit-backup.json/);
-      assert.ok(backup.data.products.length === 41);
+      assert.match(backup.headers.get('content-disposition'), /farfalli-backup.json/);
+      assert.equal(backup.data.products.length, 10);
       assert.equal(backup.data.users, undefined);
       assert.equal(backup.data.sessions, undefined);
       const stats = await request('/api/admin/stats');
       assert.equal(stats.status, 200);
-      assert.equal(stats.data.products, 41);
+      assert.equal(stats.data.products, 10);
     });
     await t.test('Login rate limits are enforced with Retry-After', async () => {
       let response;

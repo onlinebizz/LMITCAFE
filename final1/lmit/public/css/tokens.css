@@ -1,19 +1,18 @@
-/* LMIT design tokens. Every colour is sampled from the cafe: menu card green, door olive, menu paper cream,
-   brass lettering, counter sage, back wall terracotta, awning teal. */
+/* Retain the café component tokens and fonts with Farfalli's editorial palette. */
 :root {
-  --forest-950: #04170f;
-  --forest-900: #082519;
-  --forest-800: #0e3324;
-  --forest-700: #17452f;
-  --forest-600: #235a3f;
+  --forest-950: #201713;
+  --forest-900: #2e2019;
+  --forest-800: #841f1b;
+  --forest-700: #681512;
+  --forest-600: #92372e;
   --olive-600: #5e6a2b;
   --olive-800: #433e2b;
-  --cream-50: #faf5ea;
-  --cream-100: #f0dfc8;
-  --cream-200: #e4cfae;
-  --cream-300: #cdb48c;
-  --brass-300: #e2c27f;
-  --brass-400: #c9a257;
+  --cream-50: #f8f3e8;
+  --cream-100: #f0e7d8;
+  --cream-200: #e9dfd0;
+  --cream-300: #d9cdbd;
+  --brass-300: #efc2a4;
+  --brass-400: #c99a79;
   --brass-600: #a9822f;
   --brass-700: #7d5f1c;
   --sage-400: #7fa88b;
@@ -22,9 +21,9 @@
   --terra-700: #8f3f1e;
   --teal-500: #4b9d9b;
   --teal-700: #2b6f6d;
-  --ink-900: #0b1f15;
-  --ink-700: #26382d;
-  --ink-500: #4a5e51;
+  --ink-900: #261c17;
+  --ink-700: #514238;
+  --ink-500: #64574d;
   --danger: #a63a2b;
   --ok: #2f6b45;
 
@@ -43,12 +42,15 @@
   --space-6: 2rem; --space-7: 3rem; --space-8: 4.5rem; --space-9: 6.5rem;
 
   --r-sm: 4px; --r-md: 10px; --r-lg: 18px; --r-pill: 999px;
-  --shadow-soft: 0 10px 30px -12px rgba(4, 23, 15, 0.35);
+  --shadow-soft: 0 10px 30px -12px rgba(38, 28, 23, .26);
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --t-fast: 160ms; --t-med: 300ms;
   --gutter: clamp(1rem, 4vw, 2rem);
   --max: 72rem;
 }
+
+.wordmark { display: inline-block; color: inherit; font: 550 2.55rem/.98 var(--font-display); font-variation-settings: "opsz" 18; letter-spacing: -.055em; white-space: nowrap; }
+.wordmark > span { color: var(--brass-400); }
 
 /* Category accent colours, picked in the dashboard */
 [data-accent='brass'] { --accent: var(--brass-400); --accent-ink: var(--brass-700); }

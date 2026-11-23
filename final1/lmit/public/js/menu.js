@@ -1,6 +1,6 @@
 // Browse-only customer menu. No cart, checkout, quantities or order storage.
 import { start } from './shell.js';
-import { t, esc, ICON, renderMenuSections, renderRail, imgHtml, priceHtml, names } from './view.js';
+import { t, esc, ICON, renderMenuSections, renderRail, imgHtml, priceHtml, menuPrice, names, fullMenuLink } from './view.js';
 
 const lang = document.documentElement.lang;
 let cats = JSON.parse(document.getElementById('boot')?.textContent || '{}').categories || [];
@@ -71,13 +71,13 @@ function productDetails(product) {
   dialog.setAttribute('aria-labelledby', 'detail-title');
   dialog.innerHTML = `<div class="sheet-inner"><button type="button" class="sheet-close icon-btn" aria-label="${esc(t(lang, 'close'))}">${ICON.close}</button>
     ${product.image ? imgHtml(product.image, { lang, cls: 'sheet-img', sizes: '560px', eager: true }) : ''}
-    <div class="detail-heading"><h2 id="detail-title">${esc(nm.p)}</h2>${priceHtml(product.price, lang)}</div>
+    <div class="detail-heading"><h2 id="detail-title">${esc(nm.p)}</h2>${menuPrice(product.price, lang)}</div>
     ${nm.s ? `<p class="other-name" lang="${nm.sl}" dir="${nm.sl === 'ar' ? 'rtl' : 'ltr'}">${esc(nm.s)}</p>` : ''}
     ${description ? `<p class="detail-description">${esc(description)}</p>` : ''}
     ${!product.available ? `<p class="detail-unavailable">${esc(t(lang, 'sold_out'))}</p>` : ''}
     ${options(product.variants, lang === 'ar' ? 'الخيارات وفارق السعر' : 'Options and price difference', (v) => v.price_delta)}
     ${options(product.extras, t(lang, 'extras'), (e) => e.price)}
-    <p class="detail-note">${lang === 'ar' ? 'للطلب، تفضل عند الكاشير.' : 'Please order at the counter.'}</p></div>`;
+    <p class="detail-note">${fullMenuLink(lang)}</p></div>`;
   const previous = document.activeElement;
   document.body.append(dialog);
   dialog.querySelector('.sheet-close').addEventListener('click', () => dialog.close());

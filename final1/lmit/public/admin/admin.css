@@ -1,4 +1,8 @@
-/* LMIT dashboard. Forest sidebar, cream workspace, brass hairlines, accent edges like the printed menu sections. */
+/* Farfalli dashboard. Espresso sidebar, ivory workspace and brick-red actions. */
+.side .side-logo { color: var(--cream-50); text-decoration: none; }
+.login-art .wordmark { font-size: clamp(3rem, 6vw, 6.3rem); }
+.main :is(.p-thumb, .imgf-box, .ge-img, .ph, .ph-big, .up-thumb), .pick-grid .pick { border-radius: var(--r-md); overflow: hidden; }
+.main :is(.p-thumb, .imgf-box, .ge-img, .ph, .ph-big, .up-thumb) img, .pick-grid .pick img { object-fit: contain; }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body { margin: 0; background: var(--cream-50); color: var(--ink-900); font-family: var(--font-body); font-size: 1rem; line-height: 1.55; }
