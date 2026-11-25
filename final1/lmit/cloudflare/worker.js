@@ -2,7 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { requestContext } from './context.js';
 import { requestBridge, responseBridge } from './bridge.js';
 import { all, one } from './db.js';
-import { pruneSessions, bootstrapOwner, basicCredentials, login, sameOrigin } from './auth.js';
+import { pruneSessions, bootstrapOwner, resetOwner, basicCredentials, login, sameOrigin } from './auth.js';
 import { HttpError, json, send } from '../.cloudflare/server/http.js';
 import * as admin from '../.cloudflare/server/api-admin.js';
 import * as publicApi from '../.cloudflare/server/api-public.js';
@@ -74,6 +74,10 @@ export class Cafe extends DurableObject {
       if (!['GET', 'POST', 'PUT', 'DELETE', 'HEAD'].includes(request.method)) throw new HttpError(405, 'method', 'Method not allowed.');
       if (request.method === 'POST' && url.pathname === '/api/admin/bootstrap') {
         json(req, res, 200, await bootstrapOwner(req));
+        return res.toResponse();
+      }
+      if (request.method === 'POST' && url.pathname === '/api/admin/reset') {
+        json(req, res, 200, await resetOwner(req));
         return res.toResponse();
       }
       // Secure credential proxies can verify login without copying passwords

@@ -61,6 +61,24 @@ export async function bootstrapOwner(req) {
   return { ok: true, user: { email } };
 }
 
+// Break-glass owner password reset. Only works while a RESET_KEY secret (32+ chars) is set.
+export async function resetOwner(req) {
+  sameOrigin(req);
+  const expected = current().env.RESET_KEY;
+  if (!expected || expected.length < 32) throw new HttpError(404, 'not_found', 'Not found.');
+  if (!same(sha(req.headers['x-reset-key'] || ''), sha(expected))) throw new HttpError(403, 'forbidden', 'Reset is not authorized.');
+  const { email, password } = basicCredentials(req);
+  const hash = await hashPassword(password);
+  const user = one('SELECT id,email FROM users ORDER BY id LIMIT 1');
+  tx(() => {
+    if (user) run('UPDATE users SET pass=? WHERE id=?', hash, user.id);
+    else run('INSERT INTO users(email,pass) VALUES(?,?)', email, hash);
+    run('DELETE FROM sessions');
+    run('DELETE FROM rate_limits');
+  });
+  return { ok: true, email: user ? user.email : email };
+}
+
 // Persist rate limits so eviction and isolate restarts cannot reset a login lockout.
 export function rateLimit(key, max, windowMs) {
   const now = Date.now();
