@@ -32,7 +32,7 @@ export function renderScreen(site, categories, lang) {
   return `<div class="counter-screen">
     <header class="screen-header">${wordmark}<a class="screen-language" href="${otherLang === 'ar' ? '/screen' : '/en/screen'}" lang="${otherLang}" dir="${otherLang === 'ar' ? 'rtl' : 'ltr'}">${otherLang === 'en' ? 'English' : 'العربية'}</a></header>
     <div class="screen-layout"><div class="screen-main" id="screen-panel" tabindex="0" role="region" aria-label="${lang === 'ar' ? 'قائمة فارفيلي، مرّر لعرض المنتجات' : 'Farfalli menu, scroll to browse products'}">${displayGallery(categories, lang)}</div>
-      <aside class="screen-sidebar"><p class="screen-kicker">${lang === 'ar' ? 'قائمتنا' : 'OUR MENU'}</p><nav id="screen-categories" aria-label="${lang === 'ar' ? 'الأقسام' : 'Categories'}">${displayNav(categories, first?.id, lang)}</nav><p class="screen-brand-line" lang="en" dir="ltr">Italian kitchen &amp; café<br>Abha</p></aside></div>
+      <aside class="screen-sidebar"><p class="screen-kicker">${lang === 'ar' ? 'قائمتنا' : 'OUR MENU'}</p><nav id="screen-categories" aria-label="${lang === 'ar' ? 'الأقسام' : 'Categories'}">${displayNav(categories, first?.id, lang)}</nav>${lang === 'ar' ? '<p class="screen-brand-line" lang="ar" dir="rtl">مطبخ وكافيه إيطالي<br>أبها</p>' : '<p class="screen-brand-line" lang="en" dir="ltr">Italian kitchen &amp; café<br>Abha</p>'}</aside></div>
     <footer class="screen-footer"><button type="button" id="screen-fullscreen">${lang === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</button></footer>
   </div>`;
 }

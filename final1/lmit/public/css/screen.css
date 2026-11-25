@@ -12,12 +12,12 @@ body[data-page="screen"] > #main { margin: 0; padding: 0; max-width: none; }
 #screen-categories { display: grid; gap: 12px; }
 .screen-category { width: 100%; min-height: 44px; padding: 14px 16px; border: 0; border-radius: 8px; background: none; color: var(--cream-200); text-align: start; font: 500 clamp(18px, 1.9vw, 30px)/1.4 var(--font-body); cursor: pointer; }
 .screen-category[aria-current] { color: var(--brass-300); background: rgba(201,162,87,.1); }
-.screen-brand-line { margin-top: auto; padding-top: 32px; color: var(--brass-300); font: 400 clamp(22px, 2.8vw, 42px)/1.1 var(--font-display); text-align: start; }
+.screen-brand-line { margin-top: auto; padding-top: 32px; color: var(--brass-300); font: 400 clamp(20px, 2.2vw, 34px)/1.15 var(--font-display); text-align: start; padding-bottom: 8px; }
 .screen-language { flex: none; min-height: 44px; display: grid; place-items: center; color: var(--cream-200); font-size: 14px; text-decoration: none; }
-.screen-main { position: relative; min-height: 0; overflow-y: scroll; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: auto; scrollbar-color: auto; padding: 8px 3vw 36px; }
-.screen-main::-webkit-scrollbar { width: 12px; }
-.screen-main::-webkit-scrollbar-track { background: var(--forest-900); }
-.screen-main::-webkit-scrollbar-thumb { border: 3px solid var(--forest-900); background: var(--brass-400); border-radius: 10px; }
+.screen-main { position: relative; min-height: 0; overflow-y: scroll; overscroll-behavior: contain; scrollbar-width: none; padding: 8px 3vw 36px; }
+.screen-main::-webkit-scrollbar, .screen-sidebar::-webkit-scrollbar, #screen-categories::-webkit-scrollbar, .counter-detail::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.screen-sidebar, #screen-categories, .counter-detail { scrollbar-width: none; }
+.screen-brand-line[lang="ar"] { font-family: var(--font-ar-display); line-height: 1.5; }
 .screen-group { max-width: none; margin: 0; padding: 12px 0 40px; scroll-margin-top: 8px; }
 .screen-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 14px; margin: 0 0 20px; }
 .screen-title h1 { margin: 0; color: var(--cream-50); font: 500 clamp(25px, 2.8vw, 42px)/1.4 var(--font-body); }
